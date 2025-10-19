@@ -1,0 +1,13 @@
+# Netlify config for deploying the Next.js frontend
+# Build: Netlify will detect Next.js and handle SSR.
+
+[build]
+  command = "pnpm --filter @meno/web build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
