@@ -224,6 +224,122 @@ export async function generateAIResponse(
 }
 
 /**
+ * Generate streaming AI response using OpenAI GPT-4
+ * Returns an async generator that yields token deltas
+ *
+ * @param message - User's current message
+ * @param conversationHistory - Previous messages for context
+ * @param isSafetyTriggered - Whether safety escalation was triggered
+ * @returns Async generator yielding response chunks
+ */
+export async function* generateAIResponseStream(
+  message: string,
+  conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
+  isSafetyTriggered: boolean = false
+): AsyncGenerator<{ type: 'delta' | 'done'; content?: string; meta?: AIResponse }> {
+
+  // If safety is triggered, yield the full safety response
+  if (isSafetyTriggered) {
+    const safetyResponse: AIResponse = {
+      validate: "I hear how unbearable this feels right now.",
+      reflect: "It sounds like you're going through something really heavy.",
+      reframe: "You don't have to face this alone.",
+      empower: "Would you be open to reaching out to professional support?",
+      full_response: SAFETY_RESPONSE_TEMPLATE,
+      safety_triggered: true,
+      emotion_detected: 'sadness',
+      need_identified: 'safety'
+    };
+
+    // Stream the safety response word by word
+    const words = SAFETY_RESPONSE_TEMPLATE.split(' ');
+    for (const word of words) {
+      yield { type: 'delta', content: word + ' ' };
+      await new Promise(resolve => setTimeout(resolve, 50)); // Simulate streaming delay
+    }
+
+    yield { type: 'done', meta: safetyResponse };
+    return;
+  }
+
+  // If OpenAI is not configured, stream mock response
+  if (!isOpenAIConfigured) {
+    console.warn('⚠️  OpenAI not configured. Using mock streaming.');
+    const mockResponse = await generateMockResponse(message, isSafetyTriggered);
+
+    // Stream the mock response word by word
+    const words = mockResponse.full_response.split(' ');
+    for (const word of words) {
+      yield { type: 'delta', content: word + ' ' };
+      await new Promise(resolve => setTimeout(resolve, 30));
+    }
+
+    yield { type: 'done', meta: mockResponse };
+    return;
+  }
+
+  try {
+    // Build messages array for OpenAI
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      { role: 'system', content: MAIN_SYSTEM_PROMPT },
+      ...conversationHistory.slice(-6),
+      { role: 'user', content: message }
+    ];
+
+    // Call OpenAI API with streaming enabled
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages,
+      temperature: 0.7,
+      max_tokens: 400,
+      presence_penalty: 0.6,
+      frequency_penalty: 0.3,
+      stream: true, // Enable streaming
+    });
+
+    let fullResponse = '';
+
+    // Stream the response
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta?.content || '';
+      if (delta) {
+        fullResponse += delta;
+        yield { type: 'delta', content: delta };
+      }
+    }
+
+    // Detect emotion and need from user message
+    const emotion = detectEmotion(message);
+    const need = identifyNeed(message, emotion);
+
+    // Parse the complete response
+    const structuredResponse = parseResponseInto4Steps(fullResponse);
+
+    const finalMeta: AIResponse = {
+      ...structuredResponse,
+      full_response: fullResponse,
+      safety_triggered: false,
+      emotion_detected: emotion,
+      need_identified: need
+    };
+
+    yield { type: 'done', meta: finalMeta };
+
+  } catch (error) {
+    console.error('Error in streaming OpenAI:', error);
+
+    // Fall back to mock streaming on error
+    const mockResponse = await generateMockResponse(message, isSafetyTriggered);
+    const words = mockResponse.full_response.split(' ');
+    for (const word of words) {
+      yield { type: 'delta', content: word + ' ' };
+      await new Promise(resolve => setTimeout(resolve, 30));
+    }
+    yield { type: 'done', meta: mockResponse };
+  }
+}
+
+/**
  * Parse AI response into 4-step structure
  * Attempts to identify each step in the response
  *

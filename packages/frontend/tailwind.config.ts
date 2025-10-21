@@ -9,18 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // MenoAI color palette - warm, calming, feminine but not stereotypical
+        // Meno.i brand colors - elegant, warm, sophisticated
+        // Based on logo: peachy/sand tones on dark background
         primary: {
-          50: '#fdf4f3',
-          100: '#fce8e6',
-          200: '#fad5d1',
-          300: '#f5b5ad',
-          400: '#ed8b7e',
-          500: '#e06655',
-          600: '#cc4a3a',
-          700: '#ab3b2e',
-          800: '#8e342a',
-          900: '#763128',
+          50: '#faf6f4',
+          100: '#f5ede8',
+          200: '#ecdcd1',
+          300: '#e2c5b5',
+          400: '#d5a894',
+          500: '#c48a70',
+          600: '#b27157',
+          700: '#955b47',
+          800: '#7a4c3d',
+          900: '#654036',
         },
         neutral: {
           50: '#fafaf9',
@@ -33,6 +34,11 @@ const config: Config = {
           700: '#44403c',
           800: '#292524',
           900: '#1c1917',
+        },
+        dark: {
+          DEFAULT: '#0a0a0a',
+          50: '#1a1a1a',
+          100: '#141414',
         },
       },
     },

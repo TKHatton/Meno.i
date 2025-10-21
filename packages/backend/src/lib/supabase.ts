@@ -18,8 +18,10 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const isSupabaseConfigured =
   !!supabaseUrl &&
   !!supabaseServiceKey &&
-  supabaseUrl !== 'https://bxtsqrkcqgsdydiriqks.supabase.co' &&
-  supabaseServiceKey !== 'placeholder-key';
+  !supabaseUrl.includes('placeholder') &&
+  !supabaseUrl.includes('your-project-id') &&
+  supabaseServiceKey !== 'placeholder-key' &&
+  !supabaseServiceKey.startsWith('eyJhbGci...');
 
 /**
  * Supabase admin client
@@ -221,6 +223,52 @@ export async function logSafetyEvent(
       });
   } catch (error) {
     console.error('Failed to log safety event:', error);
+  }
+}
+
+/**
+ * Get recent safety logs with message previews
+ * @param days - Number of days to look back (default: 7)
+ * @returns Array of safety logs with message data
+ */
+export async function getSafetyLogs(days: number = 7): Promise<any[]> {
+  if (!isSupabaseConfigured) {
+    console.warn('⚠️  Supabase not configured. Cannot retrieve safety logs.');
+    return [];
+  }
+
+  try {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    const { data, error } = await supabaseAdmin
+      .from('safety_logs')
+      .select(`
+        id,
+        user_id,
+        message_id,
+        trigger_phrase,
+        escalation_action,
+        created_at,
+        messages (
+          id,
+          content,
+          conversation_id,
+          created_at
+        )
+      `)
+      .gte('created_at', sinceDate.toISOString())
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error retrieving safety logs:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Failed to retrieve safety logs:', error);
+    return [];
   }
 }
 

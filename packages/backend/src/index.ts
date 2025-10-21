@@ -8,16 +8,37 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import healthRouter from './routes/health';
 import chatRouter from './routes/chat';
+import adminRouter from './routes/admin';
+import { initSentry } from './lib/sentry';
 
 // Load environment variables
 dotenv.config();
 
+// Initialize Sentry for error tracking
+initSentry();
+
 const app = express();
 const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Middleware
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  'http://localhost:3000',
+  'https://studious-orbit-9vvxjj6wqwphpprj-3000.app.github.dev'
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -31,6 +52,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/health', healthRouter);
 app.use('/api/chat', chatRouter);
+app.use('/api/admin', adminRouter);
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -42,8 +64,6 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`✅ MenoAI Backend running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+app.listen(PORT, HOST, () => {
+  console.log(`✅ MenoAI Backend running on http://${HOST}:${PORT}`);
 });

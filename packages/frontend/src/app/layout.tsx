@@ -6,6 +6,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/components/auth/AuthProvider'
+// import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
   title: 'MenoAI - Your Compassionate Menopause Companion',
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {/* Analytics temporarily disabled - enable when PostHog is configured */}
         <AuthProvider>
           {children}
         </AuthProvider>

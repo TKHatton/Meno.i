@@ -34,3 +34,17 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a29e;
 }
+
+/* Voice input wave animation */
+@keyframes wave {
+  0%, 100% {
+    height: 1rem;
+  }
+  50% {
+    height: 1.5rem;
+  }
+}
+
+.animate-wave {
+  animation: wave 1s ease-in-out infinite;
+}
