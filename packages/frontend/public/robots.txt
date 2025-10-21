@@ -1,0 +1,18 @@
+# MenoAI Robots.txt
+# Allow search engines to index public pages only
+
+User-agent: *
+Allow: /
+Allow: /privacy
+Allow: /terms
+
+# Disallow app pages (require authentication)
+Disallow: /chat
+Disallow: /history
+Disallow: /admin
+
+# Disallow API routes
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://your-domain.com/sitemap.xml

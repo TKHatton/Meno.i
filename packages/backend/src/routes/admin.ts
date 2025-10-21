@@ -1,60 +1,46 @@
 /**
  * Admin routes for MenoAI
  * Handles admin-only operations like safety logs
+ *
+ * SECURITY: All routes protected by JWT-based admin authentication
  */
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { getSafetyLogs, isSupabaseConfigured } from '../lib/supabase';
+import { adminLimiter } from '../middleware/rateLimiter';
+import { requireAdmin, getCurrentUser } from '../middleware/adminAuth';
 
 const router = Router();
 
-/**
- * Admin authorization middleware
- * Checks if user email is in ALLOWED_ADMIN_EMAILS
- */
-function requireAdmin(req: Request, res: Response, next: NextFunction): void {
-  const allowedEmails = process.env.ALLOWED_ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
+// Apply admin-specific rate limiting
+router.use(adminLimiter);
 
-  // For development, allow if no admin emails configured
-  if (allowedEmails.length === 0) {
-    console.warn('⚠️  No ALLOWED_ADMIN_EMAILS configured. Allowing admin access for development.');
-    next();
-    return;
-  }
-
-  // In production, require proper authentication
-  // For now, we'll check a simple email query param (replace with proper auth in production)
-  const userEmail = req.query.email as string || req.headers['x-admin-email'] as string;
-
-  if (!userEmail || !allowedEmails.includes(userEmail)) {
-    res.status(403).json({
-      error: 'Unauthorized',
-      message: 'Admin access required'
-    });
-    return;
-  }
-
-  next();
-}
+// Apply JWT-based admin authentication to ALL admin routes
+router.use(requireAdmin);
 
 /**
  * GET /api/admin/safety
  * Get recent safety logs with message previews
  *
+ * Requires: JWT authentication with admin email in ALLOWED_ADMIN_EMAILS
+ *
  * Query params:
- *   - days: Number of days to look back (default: 7)
- *   - email: Admin email for authorization (temporary - use proper auth in production)
+ *   - days: Number of days to look back (default: 7, max: 365)
  */
-router.get('/safety', requireAdmin, async (req, res) => {
+router.get('/safety', async (req, res) => {
   try {
+    // Get authenticated admin user info
+    const adminUser = getCurrentUser(req);
+    const days = parseInt(req.query.days as string) || 7;
+
+    console.log(`📊 Admin ${adminUser?.email} accessing safety logs (${days} days)`);
+
     if (!isSupabaseConfigured) {
       return res.status(503).json({
         error: 'Database not configured',
         message: 'Safety logs require Supabase configuration'
       });
     }
-
-    const days = parseInt(req.query.days as string) || 7;
 
     if (days < 1 || days > 365) {
       return res.status(400).json({
@@ -93,16 +79,22 @@ router.get('/safety', requireAdmin, async (req, res) => {
 
 /**
  * GET /api/admin/stats
- * Get basic usage statistics (future enhancement)
+ * Get basic usage statistics
+ *
+ * Requires: JWT authentication with admin email in ALLOWED_ADMIN_EMAILS
  */
-router.get('/stats', requireAdmin, async (req, res) => {
+router.get('/stats', async (req, res) => {
+  const adminUser = getCurrentUser(req);
+  console.log(`📊 Admin ${adminUser?.email} accessing statistics`);
+
   // Placeholder for future statistics endpoint
   res.json({
     message: 'Statistics endpoint coming soon',
     totalUsers: 0,
     totalConversations: 0,
     totalMessages: 0,
-    safetyEvents: 0
+    safetyEvents: 0,
+    accessedBy: adminUser?.email
   });
 });
 

@@ -241,8 +241,8 @@ export default function ChatInterface({ onSafetyTrigger }: ChatInterfaceProps) {
     <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
       {/* Error Banner */}
       {error && (
-        <div className="bg-red-50 border-b border-red-200 px-6 py-3 flex items-center justify-between">
-          <span className="text-sm text-red-800">{error}</span>
+        <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-6 py-3 flex items-center justify-between">
+          <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
           <div className="flex gap-2">
             <button
               onClick={handleRetry}

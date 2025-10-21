@@ -16,8 +16,12 @@ import {
   isSupabaseConfigured
 } from '../lib/supabase';
 import type { AIResponse } from '@menoai/shared';
+import { chatLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
+
+// Apply strict rate limiting to chat endpoints (resource-intensive OpenAI API calls)
+router.use(chatLimiter);
 
 /**
  * POST /api/chat/send

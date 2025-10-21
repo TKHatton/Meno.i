@@ -99,10 +99,12 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             placeholder={isListening ? "Listening... start speaking" : "Share what's on your mind..."}
             disabled={disabled || isListening}
             rows={1}
-            className="w-full resize-none rounded-xl border border-neutral-300 px-4 py-3 pr-12
+            className={`w-full resize-none rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-3 ${
+              isMounted && isVoiceSupported ? 'pr-14' : 'pr-4'
+            }
                      focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
-                     disabled:bg-neutral-100 disabled:cursor-not-allowed
-                     max-h-32 overflow-y-auto"
+                     disabled:bg-neutral-100 dark:disabled:bg-neutral-700 disabled:cursor-not-allowed
+                     max-h-32 overflow-y-auto bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100`}
             style={{ minHeight: '48px' }}
           />
 
@@ -111,11 +113,11 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             <button
               onClick={toggleVoiceInput}
               disabled={disabled}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg
-                       transition-colors ${
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg border-2
+                       transition-all ${
                          isListening
-                           ? 'bg-primary-600 text-white'
-                           : 'text-neutral-500 hover:text-primary-600 hover:bg-primary-50'
+                           ? 'bg-primary-600 text-white border-primary-600 shadow-lg'
+                           : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-sm'
                        } disabled:opacity-50 disabled:cursor-not-allowed`}
               aria-label={isListening ? 'Stop listening' : 'Start voice input'}
               title={isListening ? 'Click to stop listening' : 'Click to use voice input'}

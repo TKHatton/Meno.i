@@ -6,6 +6,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/components/auth/AuthProvider'
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext'
 // import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
@@ -21,10 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {/* Skip to main content for keyboard navigation */}
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
+
         {/* Analytics temporarily disabled - enable when PostHog is configured */}
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </AccessibilityProvider>
       </body>
     </html>
   )

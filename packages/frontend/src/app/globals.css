@@ -48,3 +48,164 @@ body {
 .animate-wave {
   animation: wave 1s ease-in-out infinite;
 }
+
+/* ===== ACCESSIBILITY FEATURES ===== */
+
+/* Font Size Adjustments */
+:root[data-font-size="small"] {
+  font-size: 14px;
+}
+
+:root[data-font-size="medium"] {
+  font-size: 16px;
+}
+
+:root[data-font-size="large"] {
+  font-size: 18px;
+}
+
+:root[data-font-size="x-large"] {
+  font-size: 20px;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+.high-contrast.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+}
+
+/* Enhance contrast for interactive elements */
+.high-contrast button,
+.high-contrast a,
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  border: 2px solid currentColor !important;
+}
+
+.high-contrast button:focus,
+.high-contrast a:focus,
+.high-contrast input:focus,
+.high-contrast select:focus,
+.high-contrast textarea:focus {
+  outline: 3px solid #0066cc !important;
+  outline-offset: 2px !important;
+}
+
+/* Reduced Motion */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Dark Mode */
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 23, 23, 23;
+}
+
+.dark body {
+  background: rgb(23, 23, 23);
+  color: rgb(245, 245, 245);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #525252;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #737373;
+}
+
+/* Focus Indicators - Enhanced for Keyboard Navigation */
+*:focus-visible {
+  outline: 3px solid #14b8a6;
+  outline-offset: 2px;
+}
+
+.dark *:focus-visible {
+  outline-color: #5eead4;
+}
+
+/* High contrast focus */
+.high-contrast *:focus-visible {
+  outline: 3px solid #0066cc;
+  outline-offset: 3px;
+}
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #14b8a6;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Ensure proper color contrast in high contrast mode */
+.high-contrast .text-neutral-500,
+.high-contrast .text-neutral-600 {
+  color: inherit !important;
+}
+
+.high-contrast .bg-neutral-50,
+.high-contrast .bg-neutral-100 {
+  background-color: transparent !important;
+  border: 2px solid currentColor !important;
+}
+
+/* Better link visibility */
+.high-contrast a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* Ensure buttons have sufficient contrast */
+.high-contrast button {
+  font-weight: 600 !important;
+}
+
+/* Print styles */
+@media print {
+  .skip-to-content,
+  nav,
+  button {
+    display: none;
+  }
+}

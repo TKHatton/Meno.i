@@ -10,6 +10,7 @@ import ChatInterface from '@/components/chat/ChatInterface';
 import SafetyModal from '@/components/safety/SafetyModal';
 import ProfileDropdown from '@/components/profile/ProfileDropdown';
 import ProfileModal from '@/components/profile/ProfileModal';
+import AccessibilityMenu from '@/components/accessibility/AccessibilityMenu';
 
 import { useAuth } from '@/components/auth/AuthProvider';
 
@@ -19,25 +20,26 @@ export default function ChatPage() {
   const { user } = useAuth();
 
   return (
-    <main className="h-screen flex flex-col bg-neutral-50">
+    <main id="main-content" className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-900">
       {/* Header */}
-      <header className="bg-white border-b border-neutral-200 px-6 py-4 flex items-center justify-between">
+      <header className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img
             src="/images/logo.jpeg"
             alt="Meno.i Logo"
             className="h-8 w-auto object-contain"
           />
-          <span className="text-sm text-neutral-500 hidden sm:inline">Your compassionate companion</span>
+          <span className="text-sm text-neutral-500 dark:text-neutral-400 hidden sm:inline">Your compassionate companion</span>
         </div>
 
         <div className="flex items-center gap-4">
+          <AccessibilityMenu />
           {user ? (
             <ProfileDropdown onOpenProfile={() => setShowProfileModal(true)} />
           ) : (
             <a
               href="/"
-              className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
               Sign In
             </a>

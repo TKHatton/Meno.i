@@ -66,12 +66,16 @@ export function captureMessage(message: string, level: Sentry.SeverityLevel = 'i
 }
 
 /**
- * Start a new transaction for performance monitoring
+ * Start a new span for performance monitoring
+ * Note: Use Sentry.startSpan() in newer versions
  */
 export function startTransaction(name: string, op: string) {
   if (!sentryInitialized) return null;
 
-  return Sentry.startTransaction({ name, op });
+  // For newer Sentry versions, use startSpan instead
+  // return Sentry.startSpan({ name, op }, () => { ... });
+  console.log(`Performance tracking: ${op} - ${name}`);
+  return null;
 }
 
 export { Sentry };

@@ -10,6 +10,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import SignInModal from '@/components/auth/SignInModal';
 import UserAvatar from '@/components/profile/UserAvatar';
+import Footer from '@/components/common/Footer';
+import AccessibilityMenu from '@/components/accessibility/AccessibilityMenu';
 import { supabase } from '@/lib/supabase';
 
 export default function Home() {
@@ -45,8 +47,14 @@ export default function Home() {
   const avatarUrl = customAvatarUrl || googleAvatarUrl;
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-neutral-50">
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center">
+    <main id="main-content" className="min-h-screen flex flex-col bg-gradient-to-br from-primary-50 via-white to-neutral-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+      {/* Header with Accessibility Menu */}
+      <div className="absolute top-4 right-4">
+        <AccessibilityMenu />
+      </div>
+
+      <div className="flex-1 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-6 py-12 text-center">
         {/* Logo */}
         <div className="mb-6 flex justify-center">
           <img
@@ -56,11 +64,11 @@ export default function Home() {
           />
         </div>
 
-        <p className="text-2xl text-neutral-700 mb-4">
+        <p className="text-2xl text-neutral-700 dark:text-neutral-200 mb-4">
           Your compassionate space for navigating menopause
         </p>
 
-        <p className="text-lg text-neutral-600 mb-8 max-w-xl mx-auto">
+        <p className="text-lg text-neutral-600 dark:text-neutral-300 mb-8 max-w-xl mx-auto">
           Whether you're dealing with hot flashes, brain fog, mood swings, or just feeling
           like a stranger in your own body, I'm here to listen without judgment.
         </p>
@@ -77,8 +85,8 @@ export default function Home() {
           {!user ? (
             <button
               onClick={() => setShowSignIn(true)}
-              className="px-8 py-4 bg-white text-neutral-700 font-semibold rounded-lg
-                       border-2 border-neutral-300 hover:border-neutral-400 transition-colors"
+              className="px-8 py-4 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 font-semibold rounded-lg
+                       border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
             >
               Sign In
             </button>
@@ -110,37 +118,38 @@ export default function Home() {
           )}
         </div>
 
-        <p className="text-sm text-neutral-500 mt-8">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-8">
           Free to use. Private and confidential. No judgment, just support.
         </p>
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <div className="p-6 bg-white rounded-lg shadow-sm">
-            <h3 className="font-semibold text-neutral-900 mb-2">
+          <div className="p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-sm">
+            <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
               Emotionally Intelligent
             </h3>
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm text-neutral-600 dark:text-neutral-300">
               Using NVC and NLP principles to validate your feelings and help you reframe challenges
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-lg shadow-sm">
-            <h3 className="font-semibold text-neutral-900 mb-2">
+          <div className="p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-sm">
+            <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
               Safe & Private
             </h3>
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm text-neutral-600 dark:text-neutral-300">
               GDPR compliant. Your conversations are private and deleted after 30 days
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-lg shadow-sm">
-            <h3 className="font-semibold text-neutral-900 mb-2">
+          <div className="p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-sm">
+            <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
               Always Available
             </h3>
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm text-neutral-600 dark:text-neutral-300">
               24/7 support when you need someone to talk to, without appointments or waiting
             </p>
           </div>
+        </div>
         </div>
       </div>
 
@@ -148,6 +157,9 @@ export default function Home() {
       {showSignIn && (
         <SignInModal onClose={() => setShowSignIn(false)} />
       )}
+
+      {/* Footer */}
+      <Footer />
     </main>
   );
 }

@@ -113,8 +113,9 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
               {messages.map((message) => (
                 <MessageBubble
                   key={message.id}
-                  message={message.content}
-                  sender={message.role}
+                  role={message.role}
+                  content={message.content}
+                  timestamp={new Date(message.created_at)}
                 />
               ))}
             </div>

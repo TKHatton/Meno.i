@@ -10,6 +10,7 @@ import healthRouter from './routes/health';
 import chatRouter from './routes/chat';
 import adminRouter from './routes/admin';
 import { initSentry } from './lib/sentry';
+import { generalLimiter } from './middleware/rateLimiter';
 
 // Load environment variables
 dotenv.config();
@@ -18,14 +19,16 @@ dotenv.config();
 initSentry();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = parseInt(process.env.PORT || '4000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
 
 // Middleware
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3000',
-  'https://studious-orbit-9vvxjj6wqwphpprj-3000.app.github.dev'
+  'https://studious-orbit-9vvxjj6wqwphpprj-3000.app.github.dev',
+  // TODO: Add your production Netlify URL here after deployment
+  // Example: 'https://your-app-name.netlify.app'
 ];
 
 app.use(cors({
@@ -36,12 +39,17 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`⚠️  CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
 app.use(express.json());
+
+// Apply general rate limiting to all routes
+// Specific routes may have additional, stricter limits
+app.use(generalLimiter);
 
 // Request logging middleware
 app.use((req, res, next) => {
