@@ -1,0 +1,24 @@
+# Render configuration for MenoAI backend deployment
+
+services:
+  # Express API Service
+  - type: web
+    name: menoai-backend
+    env: node
+    region: oregon
+    buildCommand: cd packages/backend && npm install && npm run build
+    startCommand: cd packages/backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: SUPABASE_URL
+        sync: false  # Set in Render dashboard
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false  # Set in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Set in Render dashboard
+      - key: FRONTEND_URL
+        value: https://your-frontend-domain.netlify.app
+    healthCheckPath: /api/health

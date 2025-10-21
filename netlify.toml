@@ -1,0 +1,30 @@
+# Netlify configuration for MenoAI frontend deployment
+
+[build]
+  # Build command for Next.js
+  command = "cd packages/frontend && npm run build"
+
+  # Output directory for Next.js static export
+  publish = "packages/frontend/.next"
+
+  # Base directory
+  base = "/"
+
+[build.environment]
+  # Node version
+  NODE_VERSION = "18.17.0"
+
+# Redirect all requests to Next.js
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
