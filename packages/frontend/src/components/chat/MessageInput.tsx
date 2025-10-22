@@ -17,6 +17,7 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
   const [message, setMessage] = useState('');
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [showVoiceHint, setShowVoiceHint] = useState(true);
 
   // Detect mobile device
   const isMobile = typeof window !== 'undefined' &&
@@ -58,11 +59,17 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
     }
   };
 
-  const toggleVoiceInput = () => {
+  // Hold to speak - start on press, stop on release
+  const handleMicPress = () => {
+    console.log('🎤 Microphone button pressed - starting listening');
+    setShowVoiceHint(false); // Hide hint once they use it
+    startListening();
+  };
+
+  const handleMicRelease = () => {
+    console.log('🎤 Microphone button released - stopping listening');
     if (isListening) {
       stopListening();
-    } else {
-      startListening();
     }
   };
 
@@ -90,28 +97,46 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
 
       {/* Listening Indicator */}
       {isListening && (
-        <div className="rounded-lg border p-4 bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800">
+        <div className="rounded-lg border p-4 bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
-                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
-                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
+                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
+                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
               </div>
               <div>
-                <div className="font-medium text-base text-primary-700 dark:text-primary-300">
-                  I'm listening...
+                <div className="font-bold text-lg text-green-800 dark:text-green-200">
+                  🎤 Recording...
                 </div>
-                <div className="text-xs text-primary-600 dark:text-primary-400 mt-0.5">
-                  Take your time, speak naturally
+                <div className="text-sm text-green-700 dark:text-green-300 mt-0.5 font-medium">
+                  Keep holding the button while you speak
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Voice How-To Hint */}
+      {isMounted && isVoiceSupported && showVoiceHint && !isListening && (
+        <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 p-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2 flex-1">
+              <div className="text-blue-600 dark:text-blue-400 text-lg">💡</div>
+              <div className="text-sm text-blue-800 dark:text-blue-200">
+                <div className="font-semibold mb-1">Voice Input: Hold to Speak</div>
+                <div className="text-blue-700 dark:text-blue-300">
+                  Press and <strong>hold</strong> the microphone button while speaking, then release when done.
                 </div>
               </div>
             </div>
             <button
-              onClick={stopListening}
-              className="text-xs px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors font-medium"
+              onClick={() => setShowVoiceHint(false)}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-xl leading-none"
+              aria-label="Dismiss hint"
             >
-              Done
+              ×
             </button>
           </div>
         </div>
@@ -132,8 +157,8 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             onKeyDown={handleKeyPress}
             placeholder={
               isListening
-                ? "I'm listening... speak whenever you're ready"
-                : "Share what's on your mind..."
+                ? "🎤 Recording... keep holding the button"
+                : "Share what's on your mind... (or hold 🎤 to speak)"
             }
             disabled={disabled || isListening}
             rows={1}
@@ -146,35 +171,35 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             style={{ minHeight: '48px' }}
           />
 
-          {/* Voice Input Button - Only render on client side to avoid hydration errors */}
+          {/* Voice Input Button - HOLD TO SPEAK */}
           {isMounted && isVoiceSupported && (
             <button
-              onClick={toggleVoiceInput}
+              onMouseDown={handleMicPress}
+              onMouseUp={handleMicRelease}
+              onMouseLeave={handleMicRelease}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleMicPress();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                handleMicRelease();
+              }}
               disabled={disabled}
               type="button"
-              className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg border-2
-                       transition-all duration-200 ${
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full border-2
+                       transition-all duration-200 select-none ${
                          isListening
-                           ? 'bg-primary-600 text-white border-primary-600 shadow-lg animate-pulse'
-                           : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-sm hover:scale-105'
+                           ? 'bg-green-600 text-white border-green-600 shadow-2xl scale-110'
+                           : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-lg hover:scale-105'
                        } disabled:opacity-50 disabled:cursor-not-allowed active:scale-95`}
-              aria-label={isListening ? 'Stop listening' : 'Start voice input'}
-              title={
-                isListening
-                  ? 'Click when done speaking'
-                  : 'Click to speak your message - I\'ll keep listening until you\'re done'
-              }
+              aria-label="Hold to speak"
+              title="HOLD this button while speaking, then release when done"
             >
-              {isListening ? (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-              )}
+              <svg className="w-6 h-6" fill={isListening ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
             </button>
           )}
         </div>
