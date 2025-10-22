@@ -44,13 +44,6 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
     setIsMounted(true);
   }, []);
 
-  // Update message as user speaks (show interim results)
-  useEffect(() => {
-    if (isListening && (transcript || interimTranscript)) {
-      setMessage(transcript + interimTranscript);
-    }
-  }, [transcript, interimTranscript, isListening]);
-
   const handleSend = () => {
     if (message.trim() && !disabled) {
       onSend(message.trim());
@@ -120,20 +113,20 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
 
       {/* Voice How-To Hint */}
       {isMounted && isVoiceSupported && showVoiceHint && !isListening && (
-        <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 p-3">
+        <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 p-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-2 flex-1">
-              <div className="text-blue-600 dark:text-blue-400 text-lg">💡</div>
-              <div className="text-sm text-blue-800 dark:text-blue-200">
+              <div className="text-amber-600 dark:text-amber-400 text-lg">💡</div>
+              <div className="text-sm text-amber-900 dark:text-amber-200">
                 <div className="font-semibold mb-1">Voice Input: Hold to Speak</div>
-                <div className="text-blue-700 dark:text-blue-300">
+                <div className="text-amber-800 dark:text-amber-300">
                   Press and <strong>hold</strong> the microphone button while speaking, then release when done.
                 </div>
               </div>
             </div>
             <button
               onClick={() => setShowVoiceHint(false)}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-xl leading-none"
+              className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 text-xl leading-none"
               aria-label="Dismiss hint"
             >
               ×

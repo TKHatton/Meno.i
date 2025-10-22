@@ -87,10 +87,30 @@ export function useSpeechRecognition({
 
         if (final) {
           console.log('Final transcript:', final);
-          finalTranscriptRef.current += final;
-          setTranscript(finalTranscriptRef.current);
-          setInterimTranscript('');
-          onFinalTranscript?.(finalTranscriptRef.current);
+          const trimmedFinal = final.trim();
+
+          // Prevent duplication: if new final text already contains our current transcript,
+          // it's a replacement (browser re-sent full transcript), not new text to append
+          if (trimmedFinal.includes(finalTranscriptRef.current.trim()) && trimmedFinal !== finalTranscriptRef.current.trim()) {
+            console.log('🔄 Replacing with fuller transcript:', trimmedFinal);
+            finalTranscriptRef.current = trimmedFinal;
+            setTranscript(finalTranscriptRef.current);
+            setInterimTranscript('');
+            onFinalTranscript?.(finalTranscriptRef.current);
+          } else if (trimmedFinal === finalTranscriptRef.current.trim()) {
+            // Exact duplicate, skip
+            console.log('⚠️ Skipping exact duplicate:', trimmedFinal);
+          } else {
+            // New text to append
+            console.log('➕ Appending new text:', trimmedFinal);
+            if (finalTranscriptRef.current && !finalTranscriptRef.current.endsWith(' ')) {
+              finalTranscriptRef.current += ' ';
+            }
+            finalTranscriptRef.current += trimmedFinal;
+            setTranscript(finalTranscriptRef.current);
+            setInterimTranscript('');
+            onFinalTranscript?.(finalTranscriptRef.current);
+          }
         }
       };
 
