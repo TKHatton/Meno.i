@@ -139,12 +139,13 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             <button
               onClick={toggleVoiceInput}
               disabled={disabled}
+              type="button"
               className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg border-2
-                       transition-all ${
+                       transition-all duration-200 ${
                          isListening
-                           ? 'bg-primary-600 text-white border-primary-600 shadow-lg'
-                           : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-sm'
-                       } disabled:opacity-50 disabled:cursor-not-allowed`}
+                           ? 'bg-primary-600 text-white border-primary-600 shadow-lg animate-pulse'
+                           : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-sm hover:scale-105'
+                       } disabled:opacity-50 disabled:cursor-not-allowed active:scale-95`}
               aria-label={isListening ? 'Stop listening' : 'Start voice input'}
               title={isListening ? 'Click to stop listening' : 'Click to use voice input'}
             >

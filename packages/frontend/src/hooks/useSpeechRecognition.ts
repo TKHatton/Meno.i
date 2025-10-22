@@ -39,6 +39,8 @@ export function useSpeechRecognition({
 
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
+  const isStartingRef = useRef(false);
+  const isStoppingRef = useRef(false);
 
   // Check browser support
   useEffect(() => {
@@ -105,11 +107,22 @@ export function useSpeechRecognition({
 
       // Handle end
       recognitionRef.current.onend = () => {
-        setIsListening(false);
+        console.log('Recognition ended');
+        isStartingRef.current = false;
+        isStoppingRef.current = false;
+
+        // Only set listening to false if we're not trying to start again
+        if (!isStartingRef.current) {
+          setIsListening(false);
+        }
       };
 
       // Handle start
       recognitionRef.current.onstart = () => {
+        console.log('Recognition started');
+        isStartingRef.current = false;
+        isStoppingRef.current = false;
+        setIsListening(true);
         setError(null);
       };
     } else {
@@ -137,53 +150,72 @@ export function useSpeechRecognition({
       return;
     }
 
+    // Prevent multiple simultaneous start attempts
+    if (isStartingRef.current || isStoppingRef.current) {
+      console.log('Recognition is already starting or stopping, please wait');
+      return;
+    }
+
+    // If already listening, don't start again
+    if (recognitionRef.current && isListening) {
+      console.log('Already listening');
+      return;
+    }
+
+    isStartingRef.current = true;
+    console.log('Starting speech recognition...');
+    setError(null);
+    finalTranscriptRef.current = '';
+    setTranscript('');
+    setInterimTranscript('');
+
     try {
-      console.log('Starting speech recognition...');
-      setError(null);
-      finalTranscriptRef.current = '';
-      setTranscript('');
-      setInterimTranscript('');
       recognitionRef.current.start();
-      setIsListening(true);
-      console.log('Speech recognition started successfully');
+      // Note: setIsListening(true) will be called in onstart handler
     } catch (err: any) {
       console.error('Error starting recognition:', err);
+      isStartingRef.current = false;
 
-      // Check if already started
       if (err.message && err.message.includes('already started')) {
-        console.log('Recognition already running, stopping first...');
-        try {
-          recognitionRef.current.stop();
-          // Try again after a short delay
-          setTimeout(() => {
-            recognitionRef.current.start();
-            setIsListening(true);
-          }, 100);
-        } catch (retryErr) {
-          console.error('Retry failed:', retryErr);
-          setError('Failed to start listening. Please try again.');
-          setIsListening(false);
-        }
+        // If already started, just update our state to match
+        console.log('Recognition already running, syncing state');
+        setIsListening(true);
       } else {
         setError('Failed to start listening. Please check microphone permissions.');
         setIsListening(false);
       }
     }
-  }, [isSupported]);
+  }, [isSupported, isListening]);
 
   const stopListening = useCallback(() => {
-    if (recognitionRef.current) {
-      try {
-        console.log('Stopping speech recognition...');
-        recognitionRef.current.stop();
-        setIsListening(false);
-        console.log('Speech recognition stopped');
-      } catch (err) {
-        console.error('Error stopping recognition:', err);
-        setIsListening(false);
-      }
+    if (!recognitionRef.current) {
+      return;
     }
-  }, []);
+
+    // Prevent multiple simultaneous stop attempts
+    if (isStoppingRef.current || isStartingRef.current) {
+      console.log('Recognition is already stopping or starting, please wait');
+      return;
+    }
+
+    // If not listening, nothing to stop
+    if (!isListening) {
+      console.log('Not currently listening');
+      return;
+    }
+
+    isStoppingRef.current = true;
+    console.log('Stopping speech recognition...');
+
+    try {
+      recognitionRef.current.stop();
+      // Note: setIsListening(false) will be called in onend handler
+    } catch (err) {
+      console.error('Error stopping recognition:', err);
+      isStoppingRef.current = false;
+      setIsListening(false);
+    }
+  }, [isListening]);
 
   const resetTranscript = useCallback(() => {
     finalTranscriptRef.current = '';
