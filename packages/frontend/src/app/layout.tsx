@@ -10,9 +10,19 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext'
 // import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
-  title: 'MenoAI - Your Compassionate Menopause Companion',
+  title: 'Meno.AI - Your Compassionate Menopause Companion',
   description: 'Emotional intelligence support for women navigating perimenopause and menopause',
+  // Add these for better SEO:
+  keywords: 'menopause, perimenopause, emotional support, AI companion',
+  openGraph: {
+    title: 'Meno.i - Your Compassionate Menopause Companion',
+    description: 'Emotional intelligence support for women navigating perimenopause and menopause',
+    url: 'https://menoi.netlify.app',
+    siteName: 'Menoi',
+    images: ['/images/logo.jpeg'],
+  },
 }
+
 
 export default function RootLayout({
   children,

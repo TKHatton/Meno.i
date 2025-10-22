@@ -73,20 +73,46 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
     <div className="space-y-2">
       {/* Voice Error Message */}
       {voiceError && (
-        <div className="text-sm text-red-600 px-2">
-          {voiceError}
+        <div className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 text-sm text-red-700 dark:text-red-300">
+          <div className="font-semibold mb-1">Voice Input Error</div>
+          <div>{voiceError}</div>
+          {voiceError.includes('denied') && (
+            <div className="mt-2 text-xs">
+              To enable voice input: Click the microphone icon in your browser's address bar and allow microphone access.
+            </div>
+          )}
         </div>
       )}
 
       {/* Listening Indicator */}
       {isListening && (
-        <div className="flex items-center gap-2 px-2 text-sm text-primary-600 animate-pulse">
-          <div className="flex gap-1">
-            <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
-            <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
-            <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
+        <div className="rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-primary-700 dark:text-primary-300">
+              <div className="flex gap-1">
+                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
+                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
+              </div>
+              <span className="font-medium">Listening to your voice...</span>
+            </div>
+            <button
+              onClick={stopListening}
+              className="text-xs px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"
+            >
+              Stop
+            </button>
           </div>
-          <span>Listening...</span>
+          <div className="mt-1 text-xs text-primary-600 dark:text-primary-400">
+            Speak clearly. Click Stop or the microphone button when done.
+          </div>
+        </div>
+      )}
+
+      {/* Voice Not Supported Warning */}
+      {isMounted && !isVoiceSupported && (
+        <div className="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-3 text-sm text-yellow-700 dark:text-yellow-300">
+          Voice input is not supported in your browser. Please use Chrome, Edge, or Safari for voice features.
         </div>
       )}
 

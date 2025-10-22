@@ -72,11 +72,13 @@ export function useSpeechRecognition({
         }
 
         if (interim) {
+          console.log('Interim transcript:', interim);
           setInterimTranscript(interim);
           onTranscript?.(finalTranscriptRef.current + interim);
         }
 
         if (final) {
+          console.log('Final transcript:', final);
           finalTranscriptRef.current += final;
           setTranscript(finalTranscriptRef.current);
           setInterimTranscript('');
@@ -129,32 +131,57 @@ export function useSpeechRecognition({
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || !isSupported) {
-      setError('Speech recognition not available');
+      const errorMsg = 'Speech recognition not available in this browser';
+      console.error(errorMsg);
+      setError(errorMsg);
       return;
     }
 
     try {
+      console.log('Starting speech recognition...');
       setError(null);
       finalTranscriptRef.current = '';
       setTranscript('');
       setInterimTranscript('');
       recognitionRef.current.start();
       setIsListening(true);
+      console.log('Speech recognition started successfully');
     } catch (err: any) {
       console.error('Error starting recognition:', err);
-      setError('Failed to start listening');
-      setIsListening(false);
+
+      // Check if already started
+      if (err.message && err.message.includes('already started')) {
+        console.log('Recognition already running, stopping first...');
+        try {
+          recognitionRef.current.stop();
+          // Try again after a short delay
+          setTimeout(() => {
+            recognitionRef.current.start();
+            setIsListening(true);
+          }, 100);
+        } catch (retryErr) {
+          console.error('Retry failed:', retryErr);
+          setError('Failed to start listening. Please try again.');
+          setIsListening(false);
+        }
+      } else {
+        setError('Failed to start listening. Please check microphone permissions.');
+        setIsListening(false);
+      }
     }
   }, [isSupported]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current) {
       try {
+        console.log('Stopping speech recognition...');
         recognitionRef.current.stop();
+        setIsListening(false);
+        console.log('Speech recognition stopped');
       } catch (err) {
         console.error('Error stopping recognition:', err);
+        setIsListening(false);
       }
-      setIsListening(false);
     }
   }, []);
 
