@@ -209,3 +209,52 @@ body {
     display: none;
   }
 }
+
+/* ===== MOBILE APP-LIKE STYLES ===== */
+
+/* iOS Safe Area Support */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Add safe area padding to bottom of viewport */
+  .safe-area-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Add safe area padding to top of viewport */
+  .safe-area-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+}
+
+/* Mobile viewport height fix (100vh on mobile includes address bar) */
+@supports (-webkit-touch-callout: none) {
+  .mobile-full-height {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Touch feedback for mobile */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+/* Hide scrollbars on mobile for cleaner app-like feel */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }
+
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

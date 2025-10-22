@@ -243,7 +243,7 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
     <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
       {/* Error Banner */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-6 py-3 flex items-center justify-between">
+        <div className="bg-red-50 dark:bg-red-900/20 md:border-b border-red-200 dark:border-red-800 px-4 md:px-6 py-3 flex items-center justify-between shadow-sm md:shadow-none">
           <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
           <div className="flex gap-2">
             <button
@@ -254,7 +254,7 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
             </button>
             <button
               onClick={copyLastResponse}
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm text-red-600 hover:text-red-700 hidden md:inline"
             >
               Copy Last Response
             </button>
@@ -269,25 +269,25 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
       )}
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-8">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-8">
         <MessageList messages={messages} />
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-neutral-200 bg-white px-6 py-4">
+      <div className="md:border-t border-neutral-200 bg-white dark:bg-neutral-800 px-4 md:px-6 py-3 md:py-4 safe-area-bottom shadow-lg md:shadow-none">
         <div className="flex items-center gap-3 mb-3">
-          <label className="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer">
             <input
               type="checkbox"
               checked={streamingMode}
               onChange={(e) => setStreamingMode(e.target.checked)}
-              className="rounded border-neutral-300"
+              className="rounded border-neutral-300 dark:border-neutral-600"
             />
             Stream mode
           </label>
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-neutral-400 dark:text-neutral-500 hidden sm:inline">
             {streamingMode ? 'Responses stream in real-time' : 'Wait for complete responses'}
           </span>
         </div>

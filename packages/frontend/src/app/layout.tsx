@@ -10,16 +10,32 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext'
 // import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
-  title: 'Meno.AI - Your Compassionate Menopause Companion',
+  title: 'Meno.i - Your Compassionate Menopause Companion',
   description: 'Emotional intelligence support for women navigating perimenopause and menopause',
-  // Add these for better SEO:
   keywords: 'menopause, perimenopause, emotional support, AI companion',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/images/logo-square.jpg',
+    apple: '/images/logo-square.jpg',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: '#000000',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Meno.i',
+  },
   openGraph: {
     title: 'Meno.i - Your Compassionate Menopause Companion',
     description: 'Emotional intelligence support for women navigating perimenopause and menopause',
     url: 'https://menoi.netlify.app',
-    siteName: 'Menoi',
-    images: ['/images/logo.jpeg'],
+    siteName: 'Meno.i',
+    images: ['/images/logo-square.jpg'],
   },
 }
 

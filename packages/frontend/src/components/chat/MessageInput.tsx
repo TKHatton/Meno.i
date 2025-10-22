@@ -97,19 +97,19 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
 
       {/* Listening Indicator */}
       {isListening && (
-        <div className="rounded-lg border p-4 bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700">
+        <div className="rounded-lg border p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
-                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
-                <div className="w-2 h-6 bg-green-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
+                <div className="w-2 h-6 bg-amber-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-6 bg-amber-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
+                <div className="w-2 h-6 bg-amber-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
               </div>
               <div>
-                <div className="font-bold text-lg text-green-800 dark:text-green-200">
+                <div className="font-bold text-lg text-amber-900 dark:text-amber-100">
                   🎤 Recording...
                 </div>
-                <div className="text-sm text-green-700 dark:text-green-300 mt-0.5 font-medium">
+                <div className="text-sm text-amber-800 dark:text-amber-200 mt-0.5 font-medium">
                   Keep holding the button while you speak
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
               className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full border-2
                        transition-all duration-200 select-none ${
                          isListening
-                           ? 'bg-green-600 text-white border-green-600 shadow-2xl scale-110'
+                           ? 'bg-amber-600 text-white border-amber-600 shadow-2xl scale-110'
                            : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-lg hover:scale-105'
                        } disabled:opacity-50 disabled:cursor-not-allowed active:scale-95`}
               aria-label="Hold to speak"

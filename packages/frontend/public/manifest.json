@@ -1,0 +1,24 @@
+{
+  "name": "Meno.i - Menopause Companion",
+  "short_name": "Meno.i",
+  "description": "Your compassionate companion for navigating menopause",
+  "start_url": "/chat",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/logo-square.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-square.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
