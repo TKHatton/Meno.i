@@ -74,6 +74,7 @@ export function useSpeechRecognition({
         });
 
         let interim = '';
+        let hasNewFinalResult = false; // Track if we added any new final text
 
         // Process ALL final results we haven't processed yet
         for (let i = 0; i < event.results.length; i++) {
@@ -91,6 +92,7 @@ export function useSpeechRecognition({
               }
               finalTranscriptRef.current += transcriptText.trim();
               lastProcessedIndexRef.current = i + 1;
+              hasNewFinalResult = true; // Mark that we added new final text
             } else {
               console.log(`⏭️ Skipping already processed result [${i}]:`, transcriptText);
             }
@@ -109,9 +111,10 @@ export function useSpeechRecognition({
           setInterimTranscript('');
         }
 
-        // Update final transcript
-        setTranscript(finalTranscriptRef.current);
-        if (finalTranscriptRef.current) {
+        // Update final transcript ONLY if we added new final text
+        if (hasNewFinalResult) {
+          console.log('✅ Calling onFinalTranscript with:', finalTranscriptRef.current);
+          setTranscript(finalTranscriptRef.current);
           onFinalTranscript?.(finalTranscriptRef.current);
         }
       };
