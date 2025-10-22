@@ -43,6 +43,7 @@ export function useSpeechRecognition({
   const isStoppingRef = useRef(false);
   const shouldBeListeningRef = useRef(false);
   const restartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastProcessedIndexRef = useRef(0);
 
   // Detect if we're on mobile
   const isMobile = typeof window !== 'undefined' &&
@@ -58,59 +59,60 @@ export function useSpeechRecognition({
       setIsSupported(true);
       recognitionRef.current = new SpeechRecognition();
 
-      // Configure recognition - use continuous mode for better mobile experience
-      recognitionRef.current.continuous = true; // Changed to true for mobile compatibility
+      // Configure recognition - use continuous mode but DON'T auto-restart (hold-to-speak)
+      recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
       recognitionRef.current.lang = lang;
       recognitionRef.current.maxAlternatives = 1;
 
-      // Handle results
+      // Handle results - use result index to prevent duplication
       recognitionRef.current.onresult = (event: any) => {
+        console.log('📝 Speech result event:', {
+          resultIndex: event.resultIndex,
+          resultsLength: event.results.length,
+          lastProcessedIndex: lastProcessedIndexRef.current
+        });
+
         let interim = '';
-        let final = '';
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcriptText = event.results[i][0].transcript;
+        // Process ALL final results we haven't processed yet
+        for (let i = 0; i < event.results.length; i++) {
+          const result = event.results[i];
+          const transcriptText = result[0].transcript;
 
-          if (event.results[i].isFinal) {
-            final += transcriptText;
+          if (result.isFinal) {
+            // Only process if we haven't seen this index before
+            if (i >= lastProcessedIndexRef.current) {
+              console.log(`✅ Processing final result [${i}]:`, transcriptText);
+
+              // Add space before new text if needed
+              if (finalTranscriptRef.current && !finalTranscriptRef.current.endsWith(' ')) {
+                finalTranscriptRef.current += ' ';
+              }
+              finalTranscriptRef.current += transcriptText.trim();
+              lastProcessedIndexRef.current = i + 1;
+            } else {
+              console.log(`⏭️ Skipping already processed result [${i}]:`, transcriptText);
+            }
           } else {
+            // Interim results - just show them, don't save
             interim += transcriptText;
           }
         }
 
+        // Update interim
         if (interim) {
-          console.log('Interim transcript:', interim);
+          console.log('💬 Interim:', interim);
           setInterimTranscript(interim);
           onTranscript?.(finalTranscriptRef.current + interim);
+        } else {
+          setInterimTranscript('');
         }
 
-        if (final) {
-          console.log('Final transcript:', final);
-          const trimmedFinal = final.trim();
-
-          // Prevent duplication: if new final text already contains our current transcript,
-          // it's a replacement (browser re-sent full transcript), not new text to append
-          if (trimmedFinal.includes(finalTranscriptRef.current.trim()) && trimmedFinal !== finalTranscriptRef.current.trim()) {
-            console.log('🔄 Replacing with fuller transcript:', trimmedFinal);
-            finalTranscriptRef.current = trimmedFinal;
-            setTranscript(finalTranscriptRef.current);
-            setInterimTranscript('');
-            onFinalTranscript?.(finalTranscriptRef.current);
-          } else if (trimmedFinal === finalTranscriptRef.current.trim()) {
-            // Exact duplicate, skip
-            console.log('⚠️ Skipping exact duplicate:', trimmedFinal);
-          } else {
-            // New text to append
-            console.log('➕ Appending new text:', trimmedFinal);
-            if (finalTranscriptRef.current && !finalTranscriptRef.current.endsWith(' ')) {
-              finalTranscriptRef.current += ' ';
-            }
-            finalTranscriptRef.current += trimmedFinal;
-            setTranscript(finalTranscriptRef.current);
-            setInterimTranscript('');
-            onFinalTranscript?.(finalTranscriptRef.current);
-          }
+        // Update final transcript
+        setTranscript(finalTranscriptRef.current);
+        if (finalTranscriptRef.current) {
+          onFinalTranscript?.(finalTranscriptRef.current);
         }
       };
 
@@ -151,61 +153,18 @@ export function useSpeechRecognition({
         }
       };
 
-      // Handle end
+      // Handle end - NO AUTO-RESTART for hold-to-speak mode
       recognitionRef.current.onend = () => {
         console.log('🛑 Recognition ended');
         console.log('Should still be listening?', shouldBeListeningRef.current);
-        console.log('Is mobile?', isMobile);
         isStartingRef.current = false;
         isStoppingRef.current = false;
 
-        // Auto-restart IMMEDIATELY if user wants to keep listening
-        if (shouldBeListeningRef.current && recognitionRef.current) {
-          console.log('🔄 IMMEDIATE Auto-restart...');
-
-          // Try to restart with NO delay for fastest recovery
-          try {
-            recognitionRef.current.start();
-            console.log('✅ Immediate restart successful');
-          } catch (err: any) {
-            console.error('❌ Immediate restart failed:', err);
-
-            // If immediate fails, try with tiny delay
-            if (restartTimeoutRef.current) {
-              clearTimeout(restartTimeoutRef.current);
-            }
-
-            restartTimeoutRef.current = setTimeout(() => {
-              if (shouldBeListeningRef.current && recognitionRef.current) {
-                try {
-                  recognitionRef.current.start();
-                  console.log('✅ Delayed restart successful');
-                } catch (retryErr: any) {
-                  console.error('❌ Delayed restart failed:', retryErr);
-
-                  // Last attempt with longer delay
-                  setTimeout(() => {
-                    if (shouldBeListeningRef.current && recognitionRef.current) {
-                      try {
-                        recognitionRef.current.start();
-                        console.log('✅ Final restart attempt successful');
-                      } catch (finalErr) {
-                        console.error('❌ All restart attempts failed');
-                        shouldBeListeningRef.current = false;
-                        setIsListening(false);
-                        setError('Voice session ended. Click the microphone to continue.');
-                      }
-                    }
-                  }, 500);
-                }
-              }
-            }, 50);
-          }
-        } else {
-          // User manually stopped, so update UI
-          console.log('👤 User manually stopped');
-          setIsListening(false);
-        }
+        // ALWAYS stop when recognition ends (hold-to-speak mode)
+        // User must hold button to keep listening
+        shouldBeListeningRef.current = false;
+        setIsListening(false);
+        console.log('✅ Recognition stopped (hold-to-speak mode)');
       };
 
       // Handle start
@@ -297,6 +256,7 @@ export function useSpeechRecognition({
     finalTranscriptRef.current = '';
     setTranscript('');
     setInterimTranscript('');
+    lastProcessedIndexRef.current = 0; // Reset index for new session
 
     try {
       recognitionRef.current.start();
@@ -367,6 +327,7 @@ export function useSpeechRecognition({
     finalTranscriptRef.current = '';
     setTranscript('');
     setInterimTranscript('');
+    lastProcessedIndexRef.current = 0;
   }, []);
 
   return {
