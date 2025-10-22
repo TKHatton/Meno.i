@@ -7,8 +7,8 @@ services:
     env: node
     region: oregon
     # Build from root to handle monorepo workspace dependencies
-    # Install root dependencies, then workspace deps, build shared, then backend
-    buildCommand: npm install && cd packages/shared && npm install && npm run build && cd ../backend && npm install && npm run build && cd ../..
+    # Install all workspace dependencies from root, then build shared and backend
+    buildCommand: npm install --include=dev && npm run build:shared && npm run build:backend
     startCommand: cd packages/backend && npm start
     envVars:
       - key: NODE_ENV
