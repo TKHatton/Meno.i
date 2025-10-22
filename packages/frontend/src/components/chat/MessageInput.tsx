@@ -107,6 +107,12 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
                 </div>
               </div>
             </div>
+            <button
+              onClick={stopListening}
+              className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Stop
+            </button>
           </div>
         </div>
       )}

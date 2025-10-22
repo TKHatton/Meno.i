@@ -44,6 +44,7 @@ export function useSpeechRecognition({
   const shouldBeListeningRef = useRef(false);
   const restartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastProcessedIndexRef = useRef(0);
+  const processedTextsRef = useRef<Set<string>>(new Set()); // Track exact text we've processed
 
   // Detect if we're on mobile
   const isMobile = typeof window !== 'undefined' &&
@@ -65,7 +66,7 @@ export function useSpeechRecognition({
       recognitionRef.current.lang = lang;
       recognitionRef.current.maxAlternatives = 1;
 
-      // Handle results - use result index to prevent duplication
+      // Handle results - use result index AND text tracking to prevent duplication
       recognitionRef.current.onresult = (event: any) => {
         console.log('📝 Speech result event:', {
           resultIndex: event.resultIndex,
@@ -79,19 +80,23 @@ export function useSpeechRecognition({
         // Process ALL final results we haven't processed yet
         for (let i = 0; i < event.results.length; i++) {
           const result = event.results[i];
-          const transcriptText = result[0].transcript;
+          const transcriptText = result[0].transcript.trim();
 
           if (result.isFinal) {
-            // Only process if we haven't seen this index before
-            if (i >= lastProcessedIndexRef.current) {
+            // Create a unique key for this result
+            const resultKey = `${i}:${transcriptText}`;
+
+            // Only process if we haven't seen this exact text at this index before
+            if (i >= lastProcessedIndexRef.current && !processedTextsRef.current.has(resultKey)) {
               console.log(`✅ Processing final result [${i}]:`, transcriptText);
 
               // Add space before new text if needed
               if (finalTranscriptRef.current && !finalTranscriptRef.current.endsWith(' ')) {
                 finalTranscriptRef.current += ' ';
               }
-              finalTranscriptRef.current += transcriptText.trim();
+              finalTranscriptRef.current += transcriptText;
               lastProcessedIndexRef.current = i + 1;
+              processedTextsRef.current.add(resultKey); // Mark this specific text as processed
               hasNewFinalResult = true; // Mark that we added new final text
             } else {
               console.log(`⏭️ Skipping already processed result [${i}]:`, transcriptText);
@@ -106,7 +111,7 @@ export function useSpeechRecognition({
         if (interim) {
           console.log('💬 Interim:', interim);
           setInterimTranscript(interim);
-          onTranscript?.(finalTranscriptRef.current + interim);
+          onTranscript?.(finalTranscriptRef.current + ' ' + interim);
         } else {
           setInterimTranscript('');
         }
@@ -260,6 +265,7 @@ export function useSpeechRecognition({
     setTranscript('');
     setInterimTranscript('');
     lastProcessedIndexRef.current = 0; // Reset index for new session
+    processedTextsRef.current.clear(); // Clear processed texts for new session
 
     try {
       recognitionRef.current.start();
@@ -331,6 +337,7 @@ export function useSpeechRecognition({
     setTranscript('');
     setInterimTranscript('');
     lastProcessedIndexRef.current = 0;
+    processedTextsRef.current.clear();
   }, []);
 
   return {
