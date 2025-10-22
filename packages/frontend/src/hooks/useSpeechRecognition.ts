@@ -96,38 +96,59 @@ export function useSpeechRecognition({
 
       // Handle errors
       recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
+        console.error('❌ Speech recognition error:', event.error);
+        console.log('Error details:', {
+          error: event.error,
+          message: event.message,
+          timeStamp: event.timeStamp,
+          isMobile: isMobile
+        });
 
-        if (event.error === 'not-allowed') {
-          setError('Microphone access denied. Please allow microphone access.');
+        if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+          setError('Microphone access denied. Please allow microphone access in your browser settings.');
           shouldBeListeningRef.current = false;
           setIsListening(false);
         } else if (event.error === 'no-speech') {
-          // On mobile, "no-speech" happens frequently - don't show error, just restart
-          console.log('No speech detected, will auto-restart if still listening');
-          // Don't set error or stop listening - let onend handle restart
+          // On mobile, "no-speech" happens frequently - don't show error
+          console.log('⏸️ No speech detected - browser may auto-stop soon');
+          // Don't set error, don't stop listening - let onend handle it
         } else if (event.error === 'network') {
           setError('Network error. Please check your connection.');
           shouldBeListeningRef.current = false;
           setIsListening(false);
         } else if (event.error === 'aborted') {
-          // Aborted errors are normal when user stops - ignore them
-          console.log('Recognition aborted');
+          // Aborted is normal when user stops
+          console.log('⏹️ Recognition aborted by user');
+        } else if (event.error === 'service-not-allowed') {
+          setError('Speech recognition service not allowed. Please check browser permissions.');
+          shouldBeListeningRef.current = false;
+          setIsListening(false);
         } else {
-          console.error(`Recognition error: ${event.error}`);
-          // Don't stop on other errors, let it try to continue
+          console.error(`⚠️ Unexpected error: ${event.error}`);
+          // For unknown errors, show message but keep trying
+          setError(`Voice input error: ${event.error}. Try clicking the microphone again.`);
         }
       };
 
       // Handle end
       recognitionRef.current.onend = () => {
-        console.log('Recognition ended');
+        console.log('🛑 Recognition ended');
+        console.log('Should still be listening?', shouldBeListeningRef.current);
+        console.log('Is mobile?', isMobile);
         isStartingRef.current = false;
         isStoppingRef.current = false;
 
-        // Auto-restart if we should still be listening (user hasn't clicked stop)
-        if (shouldBeListeningRef.current && recognitionRef.current) {
-          console.log('Auto-restarting recognition...');
+        // On mobile, auto-restart doesn't work due to security restrictions
+        // Instead, show a message and require user to click again
+        if (isMobile && shouldBeListeningRef.current) {
+          console.log('📱 Mobile detected - cannot auto-restart. User must click microphone again.');
+          shouldBeListeningRef.current = false;
+          setIsListening(false);
+          setError('Voice session ended. Click the microphone to speak again.');
+        }
+        // On desktop, try auto-restart
+        else if (!isMobile && shouldBeListeningRef.current && recognitionRef.current) {
+          console.log('🔄 Auto-restarting recognition (desktop)...');
           // Small delay before restart to avoid rapid cycling
           if (restartTimeoutRef.current) {
             clearTimeout(restartTimeoutRef.current);
@@ -136,26 +157,49 @@ export function useSpeechRecognition({
             if (shouldBeListeningRef.current && recognitionRef.current) {
               try {
                 recognitionRef.current.start();
-              } catch (err) {
-                console.error('Error auto-restarting:', err);
+                console.log('🔄 Auto-restart successful');
+              } catch (err: any) {
+                console.error('❌ Error auto-restarting:', err);
                 shouldBeListeningRef.current = false;
                 setIsListening(false);
+                setError('Voice session ended. Click the microphone to continue.');
               }
             }
           }, 100);
         } else {
           // User manually stopped, so update UI
+          console.log('👤 User manually stopped');
           setIsListening(false);
         }
       };
 
       // Handle start
       recognitionRef.current.onstart = () => {
-        console.log('Recognition started');
+        console.log('✅ Recognition started successfully');
         isStartingRef.current = false;
         isStoppingRef.current = false;
         setIsListening(true);
         setError(null);
+      };
+
+      // Handle audio start (when microphone actually starts capturing)
+      recognitionRef.current.onaudiostart = () => {
+        console.log('🎤 Microphone audio capture started');
+      };
+
+      // Handle audio end
+      recognitionRef.current.onaudioend = () => {
+        console.log('🎤 Microphone audio capture ended');
+      };
+
+      // Handle speech start
+      recognitionRef.current.onspeechstart = () => {
+        console.log('🗣️ Speech detected');
+      };
+
+      // Handle speech end
+      recognitionRef.current.onspeechend = () => {
+        console.log('🗣️ Speech ended');
       };
     } else {
       setIsSupported(false);
@@ -179,28 +223,41 @@ export function useSpeechRecognition({
   }, [continuous, lang, onTranscript, onFinalTranscript]);
 
   const startListening = useCallback(() => {
+    console.log('🎯 startListening() called');
+    console.log('Browser info:', {
+      isMobile: isMobile,
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'N/A',
+      isSupported: isSupported,
+      currentlyListening: isListening
+    });
+
     if (!recognitionRef.current || !isSupported) {
       const errorMsg = 'Speech recognition not available in this browser';
-      console.error(errorMsg);
+      console.error('❌', errorMsg);
       setError(errorMsg);
       return;
     }
 
     // Prevent multiple simultaneous start attempts
     if (isStartingRef.current || isStoppingRef.current) {
-      console.log('Recognition is already starting or stopping, please wait');
+      console.log('⏸️ Recognition is already starting or stopping, please wait');
       return;
     }
 
     // If already listening, don't start again
     if (recognitionRef.current && isListening) {
-      console.log('Already listening');
+      console.log('⏸️ Already listening');
       return;
     }
 
     isStartingRef.current = true;
     shouldBeListeningRef.current = true; // Mark that we want to keep listening
-    console.log('Starting speech recognition...');
+    console.log('🚀 Attempting to start speech recognition...');
+    console.log('Recognition config:', {
+      continuous: recognitionRef.current.continuous,
+      interimResults: recognitionRef.current.interimResults,
+      lang: recognitionRef.current.lang
+    });
     setError(null);
     finalTranscriptRef.current = '';
     setTranscript('');
@@ -208,14 +265,20 @@ export function useSpeechRecognition({
 
     try {
       recognitionRef.current.start();
+      console.log('✅ recognition.start() called successfully');
       // Note: setIsListening(true) will be called in onstart handler
     } catch (err: any) {
-      console.error('Error starting recognition:', err);
+      console.error('❌ Error calling recognition.start():', err);
+      console.error('Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+      });
       isStartingRef.current = false;
 
       if (err.message && err.message.includes('already started')) {
         // If already started, just update our state to match
-        console.log('Recognition already running, syncing state');
+        console.log('⚠️ Recognition already running, syncing state');
         setIsListening(true);
         shouldBeListeningRef.current = true;
       } else {
@@ -224,7 +287,7 @@ export function useSpeechRecognition({
         shouldBeListeningRef.current = false;
       }
     }
-  }, [isSupported, isListening]);
+  }, [isSupported, isListening, isMobile]);
 
   const stopListening = useCallback(() => {
     if (!recognitionRef.current) {
