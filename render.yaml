@@ -6,7 +6,8 @@ services:
     name: menoai-backend
     env: node
     region: oregon
-    buildCommand: cd packages/backend && npm install && npm run build
+    # Build from root to handle monorepo workspace dependencies
+    buildCommand: npm install && npm run build:shared && npm run build:backend
     startCommand: cd packages/backend && npm start
     envVars:
       - key: NODE_ENV
@@ -20,5 +21,5 @@ services:
       - key: OPENAI_API_KEY
         sync: false  # Set in Render dashboard
       - key: FRONTEND_URL
-        value: https://your-frontend-domain.netlify.app
+        value: https://menoi.netlify.app
     healthCheckPath: /api/health

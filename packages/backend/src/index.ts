@@ -27,8 +27,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3000',
   'https://studious-orbit-9vvxjj6wqwphpprj-3000.app.github.dev',
-  // TODO: Add your production Netlify URL here after deployment
-  // Example: 'https://your-app-name.netlify.app'
+  'https://menoi.netlify.app',
+  'https://www.menoi.netlify.app',
 ];
 
 app.use(cors({
