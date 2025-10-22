@@ -104,29 +104,30 @@ export function useSpeechRecognition({
           isMobile: isMobile
         });
 
+        // Only stop on critical errors - everything else should keep trying
         if (event.error === 'not-allowed' || event.error === 'permission-denied') {
           setError('Microphone access denied. Please allow microphone access in your browser settings.');
           shouldBeListeningRef.current = false;
           setIsListening(false);
         } else if (event.error === 'no-speech') {
-          // On mobile, "no-speech" happens frequently - don't show error
-          console.log('⏸️ No speech detected - browser may auto-stop soon');
-          // Don't set error, don't stop listening - let onend handle it
+          // Common on mobile - ignore completely and let auto-restart handle it
+          console.log('⏸️ No speech detected - will auto-restart');
+          // Do NOT set error or stop - let onend handle restart
         } else if (event.error === 'network') {
           setError('Network error. Please check your connection.');
           shouldBeListeningRef.current = false;
           setIsListening(false);
         } else if (event.error === 'aborted') {
-          // Aborted is normal when user stops
+          // Normal when user stops - don't log as error
           console.log('⏹️ Recognition aborted by user');
         } else if (event.error === 'service-not-allowed') {
           setError('Speech recognition service not allowed. Please check browser permissions.');
           shouldBeListeningRef.current = false;
           setIsListening(false);
         } else {
-          console.error(`⚠️ Unexpected error: ${event.error}`);
-          // For unknown errors, show message but keep trying
-          setError(`Voice input error: ${event.error}. Try clicking the microphone again.`);
+          // For any other error, just log and continue - don't show error to user
+          console.error(`⚠️ Error: ${event.error} - will continue listening`);
+          // DO NOT set error or stop listening - let auto-restart work
         }
       };
 
@@ -138,40 +139,48 @@ export function useSpeechRecognition({
         isStartingRef.current = false;
         isStoppingRef.current = false;
 
-        // Auto-restart if user wants to keep listening (both mobile and desktop)
+        // Auto-restart IMMEDIATELY if user wants to keep listening
         if (shouldBeListeningRef.current && recognitionRef.current) {
-          console.log('🔄 Auto-restarting recognition...');
-          // Small delay before restart to avoid rapid cycling
-          if (restartTimeoutRef.current) {
-            clearTimeout(restartTimeoutRef.current);
-          }
-          restartTimeoutRef.current = setTimeout(() => {
-            if (shouldBeListeningRef.current && recognitionRef.current) {
-              try {
-                recognitionRef.current.start();
-                console.log('🔄 Auto-restart successful');
-              } catch (err: any) {
-                console.error('❌ Error auto-restarting:', err);
-                // On error, keep showing listening UI but show message
-                console.log('Will try to restart again...');
-                // Try one more time after a longer delay
-                if (shouldBeListeningRef.current) {
+          console.log('🔄 IMMEDIATE Auto-restart...');
+
+          // Try to restart with NO delay for fastest recovery
+          try {
+            recognitionRef.current.start();
+            console.log('✅ Immediate restart successful');
+          } catch (err: any) {
+            console.error('❌ Immediate restart failed:', err);
+
+            // If immediate fails, try with tiny delay
+            if (restartTimeoutRef.current) {
+              clearTimeout(restartTimeoutRef.current);
+            }
+
+            restartTimeoutRef.current = setTimeout(() => {
+              if (shouldBeListeningRef.current && recognitionRef.current) {
+                try {
+                  recognitionRef.current.start();
+                  console.log('✅ Delayed restart successful');
+                } catch (retryErr: any) {
+                  console.error('❌ Delayed restart failed:', retryErr);
+
+                  // Last attempt with longer delay
                   setTimeout(() => {
                     if (shouldBeListeningRef.current && recognitionRef.current) {
                       try {
                         recognitionRef.current.start();
-                      } catch (retryErr) {
-                        console.error('❌ Retry failed:', retryErr);
+                        console.log('✅ Final restart attempt successful');
+                      } catch (finalErr) {
+                        console.error('❌ All restart attempts failed');
                         shouldBeListeningRef.current = false;
                         setIsListening(false);
                         setError('Voice session ended. Click the microphone to continue.');
                       }
                     }
-                  }, 300);
+                  }, 500);
                 }
               }
-            }
-          }, 200);
+            }, 50);
+          }
         } else {
           // User manually stopped, so update UI
           console.log('👤 User manually stopped');
