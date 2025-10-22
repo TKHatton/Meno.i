@@ -1,8 +1,11 @@
 # Netlify configuration for Meno.i frontend deployment
 
 [build]
-  # Build command for Next.js
-  command = "cd packages/frontend && npm install && npm run build"
+  # Build command for Next.js monorepo
+  # 1. Install all dependencies (sets up npm workspaces)
+  # 2. Build shared package (compiles TypeScript to dist/)
+  # 3. Build frontend package
+  command = "npm install && npm run build:shared && npm run build:frontend"
 
   # Output directory for Next.js (using Next.js runtime)
   publish = "packages/frontend/.next"
