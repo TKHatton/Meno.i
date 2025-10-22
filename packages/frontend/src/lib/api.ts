@@ -2,7 +2,7 @@
  * API client for communicating with backend
  */
 
-import type { AIResponse } from '@menoai/shared';
+import type { AIResponse, ChatMode } from '@menoai/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
@@ -19,7 +19,8 @@ interface SendMessageResponse {
 export async function sendMessage(
   message: string,
   conversationId: string | null,
-  userId?: string
+  userId?: string,
+  chatMode?: ChatMode
 ): Promise<SendMessageResponse> {
   const response = await fetch('/api/chat/send', {
     method: 'POST',
@@ -30,6 +31,7 @@ export async function sendMessage(
       message,
       conversationId,
       userId,
+      chatMode: chatMode || 'women',
     }),
   });
 
@@ -61,6 +63,7 @@ export async function sendMessageStream(
   message: string,
   conversationId: string | null,
   userId?: string,
+  chatMode?: ChatMode,
   onDelta?: (content: string) => void,
   onDone?: (meta: any) => void,
   onError?: (error: string) => void
@@ -75,6 +78,7 @@ export async function sendMessageStream(
         message,
         conversationId,
         userId,
+        chatMode: chatMode || 'women',
       }),
     });
 

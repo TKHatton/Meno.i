@@ -12,7 +12,7 @@ import TypingIndicator from './TypingIndicator';
 import { sendMessage, sendMessageStream } from '@/lib/api';
 import { useAuth } from '../auth/AuthProvider';
 // import { analytics } from '@/lib/analytics';
-import type { AIResponse } from '@menoai/shared';
+import type { AIResponse, ChatMode } from '@menoai/shared';
 import { WELCOME_MESSAGE } from '@menoai/shared';
 
 interface Message {
@@ -25,9 +25,10 @@ interface Message {
 
 interface ChatInterfaceProps {
   onSafetyTrigger: () => void;
+  chatMode: ChatMode;
 }
 
-export default function ChatInterface({ onSafetyTrigger }: ChatInterfaceProps) {
+export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfaceProps) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -87,8 +88,8 @@ export default function ChatInterface({ onSafetyTrigger }: ChatInterfaceProps) {
       // Track message sent event
       // analytics.messageSent(false);
 
-      // Send message to backend with optional userId
-      const response = await sendMessage(content, conversationId, user?.id);
+      // Send message to backend with optional userId and chatMode
+      const response = await sendMessage(content, conversationId, user?.id, chatMode);
 
       // Update conversation ID if this is the first message
       if (!conversationId && response.conversationId) {
@@ -147,6 +148,7 @@ export default function ChatInterface({ onSafetyTrigger }: ChatInterfaceProps) {
         content,
         conversationId,
         user?.id,
+        chatMode,
         // onDelta
         (delta: string) => {
           streamedContent += delta;

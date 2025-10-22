@@ -4,8 +4,8 @@
  */
 
 import OpenAI from 'openai';
-import type { AIResponse, EmotionTag, NeedTag } from '@menoai/shared';
-import { SAFETY_RESPONSE_TEMPLATE, MAIN_SYSTEM_PROMPT } from '@menoai/shared';
+import type { AIResponse, EmotionTag, NeedTag, ChatMode } from '@menoai/shared';
+import { SAFETY_RESPONSE_TEMPLATE, MAIN_SYSTEM_PROMPT, PARTNER_SYSTEM_PROMPT } from '@menoai/shared';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -145,12 +145,14 @@ export async function generateMockResponse(
  * @param message - User's current message
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
+ * @param chatMode - Chat mode: 'women' or 'partners'
  * @returns Structured AI response
  */
 export async function generateAIResponse(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
-  isSafetyTriggered: boolean = false
+  isSafetyTriggered: boolean = false,
+  chatMode: ChatMode = 'women'
 ): Promise<AIResponse> {
 
   // If safety is triggered, return safety response immediately
@@ -174,9 +176,12 @@ export async function generateAIResponse(
   }
 
   try {
+    // Select system prompt based on chat mode
+    const systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+
     // Build messages array for OpenAI
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: 'system', content: MAIN_SYSTEM_PROMPT },
+      { role: 'system', content: systemPrompt },
       ...conversationHistory.slice(-6), // Last 3 conversation turns (6 messages)
       { role: 'user', content: message }
     ];
@@ -185,10 +190,10 @@ export async function generateAIResponse(
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       messages,
-      temperature: 0.7,
+      temperature: 0.9, // Increased from 0.7 for more varied responses
       max_tokens: 400,
       presence_penalty: 0.6, // Encourage varied responses
-      frequency_penalty: 0.3, // Reduce repetition
+      frequency_penalty: 0.4, // Increased from 0.3 to reduce repetition more
     });
 
     const aiMessage = completion.choices[0]?.message?.content || '';
@@ -230,12 +235,14 @@ export async function generateAIResponse(
  * @param message - User's current message
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
+ * @param chatMode - Chat mode: 'women' or 'partners'
  * @returns Async generator yielding response chunks
  */
 export async function* generateAIResponseStream(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
-  isSafetyTriggered: boolean = false
+  isSafetyTriggered: boolean = false,
+  chatMode: ChatMode = 'women'
 ): AsyncGenerator<{ type: 'delta' | 'done'; content?: string; meta?: AIResponse }> {
 
   // If safety is triggered, yield the full safety response
@@ -279,9 +286,12 @@ export async function* generateAIResponseStream(
   }
 
   try {
+    // Select system prompt based on chat mode
+    const systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+
     // Build messages array for OpenAI
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: 'system', content: MAIN_SYSTEM_PROMPT },
+      { role: 'system', content: systemPrompt },
       ...conversationHistory.slice(-6),
       { role: 'user', content: message }
     ];
@@ -290,10 +300,10 @@ export async function* generateAIResponseStream(
     const stream = await openai.chat.completions.create({
       model: 'gpt-4',
       messages,
-      temperature: 0.7,
+      temperature: 0.9, // Increased from 0.7 for more varied responses
       max_tokens: 400,
       presence_penalty: 0.6,
-      frequency_penalty: 0.3,
+      frequency_penalty: 0.4, // Increased from 0.3 to reduce repetition more
       stream: true, // Enable streaming
     });
 

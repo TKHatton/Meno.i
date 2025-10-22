@@ -32,7 +32,7 @@ router.use(chatLimiter);
  */
 router.post('/send', async (req, res) => {
   try {
-    const { message, conversationId, userId } = req.body;
+    const { message, conversationId, userId, chatMode = 'women' } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
@@ -97,7 +97,8 @@ router.post('/send', async (req, res) => {
     const aiResponse: AIResponse = await generateAIResponse(
       message,
       conversationHistory,
-      safetyCheck.isHighRisk
+      safetyCheck.isHighRisk,
+      chatMode
     );
 
     // Save AI response to database (only if using database)
@@ -236,7 +237,7 @@ router.delete('/conversation/:conversationId', async (req, res) => {
  */
 router.post('/send-stream', async (req, res) => {
   try {
-    const { message, conversationId, userId } = req.body;
+    const { message, conversationId, userId, chatMode = 'women' } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
@@ -309,7 +310,8 @@ router.post('/send-stream', async (req, res) => {
     const streamGenerator = generateAIResponseStream(
       message,
       conversationHistory,
-      safetyCheck.isHighRisk
+      safetyCheck.isHighRisk,
+      chatMode
     );
 
     // Handle client disconnect

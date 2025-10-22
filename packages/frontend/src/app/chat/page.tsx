@@ -13,10 +13,12 @@ import ProfileModal from '@/components/profile/ProfileModal';
 import AccessibilityMenu from '@/components/accessibility/AccessibilityMenu';
 
 import { useAuth } from '@/components/auth/AuthProvider';
+import type { ChatMode } from '@menoai/shared';
 
 export default function ChatPage() {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [chatMode, setChatMode] = useState<ChatMode>('women');
   const { user } = useAuth();
 
   return (
@@ -33,6 +35,32 @@ export default function ChatPage() {
         </div>
 
         <div className="flex items-center gap-4">
+          {/* Chat Mode Selector */}
+          <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-700 rounded-lg p-1">
+            <button
+              onClick={() => setChatMode('women')}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+                chatMode === 'women'
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+              aria-label="Chat mode for women"
+            >
+              For Women
+            </button>
+            <button
+              onClick={() => setChatMode('partners')}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+                chatMode === 'partners'
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+              aria-label="Chat mode for partners"
+            >
+              For Partners
+            </button>
+          </div>
+
           <AccessibilityMenu />
           {user ? (
             <ProfileDropdown onOpenProfile={() => setShowProfileModal(true)} />
@@ -48,7 +76,7 @@ export default function ChatPage() {
       </header>
 
       {/* Chat Interface */}
-      <ChatInterface onSafetyTrigger={() => setShowSafetyModal(true)} />
+      <ChatInterface onSafetyTrigger={() => setShowSafetyModal(true)} chatMode={chatMode} />
 
       {/* Safety Modal */}
       {showSafetyModal && (
