@@ -18,6 +18,10 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
+  // Detect mobile device
+  const isMobile = typeof window !== 'undefined' &&
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   const {
     isListening,
     transcript,
@@ -86,25 +90,29 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
 
       {/* Listening Indicator */}
       {isListening && (
-        <div className="rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 p-3">
+        <div className="rounded-lg border p-4 bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-primary-700 dark:text-primary-300">
+            <div className="flex items-center gap-2">
               <div className="flex gap-1">
-                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
-                <div className="w-1 h-4 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
+                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '100ms' }}></div>
+                <div className="w-1.5 h-5 bg-primary-600 rounded-full animate-wave" style={{ animationDelay: '200ms' }}></div>
               </div>
-              <span className="font-medium">Listening to your voice...</span>
+              <div>
+                <div className="font-medium text-base text-primary-700 dark:text-primary-300">
+                  I'm listening...
+                </div>
+                <div className="text-xs text-primary-600 dark:text-primary-400 mt-0.5">
+                  Take your time, speak naturally
+                </div>
+              </div>
             </div>
             <button
               onClick={stopListening}
-              className="text-xs px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"
+              className="text-xs px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors font-medium"
             >
-              Stop
+              Done
             </button>
-          </div>
-          <div className="mt-1 text-xs text-primary-600 dark:text-primary-400">
-            Speak clearly. Click Stop or the microphone button when done.
           </div>
         </div>
       )}
@@ -122,7 +130,11 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder={isListening ? "Listening... start speaking" : "Share what's on your mind..."}
+            placeholder={
+              isListening
+                ? "I'm listening... speak whenever you're ready"
+                : "Share what's on your mind..."
+            }
             disabled={disabled || isListening}
             rows={1}
             className={`w-full resize-none rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-3 ${
@@ -147,7 +159,11 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
                            : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:text-primary-600 hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 shadow-sm hover:scale-105'
                        } disabled:opacity-50 disabled:cursor-not-allowed active:scale-95`}
               aria-label={isListening ? 'Stop listening' : 'Start voice input'}
-              title={isListening ? 'Click to stop listening' : 'Click to use voice input'}
+              title={
+                isListening
+                  ? 'Click when done speaking'
+                  : 'Click to speak your message - I\'ll keep listening until you\'re done'
+              }
             >
               {isListening ? (
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

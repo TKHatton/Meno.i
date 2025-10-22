@@ -138,17 +138,9 @@ export function useSpeechRecognition({
         isStartingRef.current = false;
         isStoppingRef.current = false;
 
-        // On mobile, auto-restart doesn't work due to security restrictions
-        // Instead, show a message and require user to click again
-        if (isMobile && shouldBeListeningRef.current) {
-          console.log('📱 Mobile detected - cannot auto-restart. User must click microphone again.');
-          shouldBeListeningRef.current = false;
-          setIsListening(false);
-          setError('Voice session ended. Click the microphone to speak again.');
-        }
-        // On desktop, try auto-restart
-        else if (!isMobile && shouldBeListeningRef.current && recognitionRef.current) {
-          console.log('🔄 Auto-restarting recognition (desktop)...');
+        // Auto-restart if user wants to keep listening (both mobile and desktop)
+        if (shouldBeListeningRef.current && recognitionRef.current) {
+          console.log('🔄 Auto-restarting recognition...');
           // Small delay before restart to avoid rapid cycling
           if (restartTimeoutRef.current) {
             clearTimeout(restartTimeoutRef.current);
@@ -160,12 +152,26 @@ export function useSpeechRecognition({
                 console.log('🔄 Auto-restart successful');
               } catch (err: any) {
                 console.error('❌ Error auto-restarting:', err);
-                shouldBeListeningRef.current = false;
-                setIsListening(false);
-                setError('Voice session ended. Click the microphone to continue.');
+                // On error, keep showing listening UI but show message
+                console.log('Will try to restart again...');
+                // Try one more time after a longer delay
+                if (shouldBeListeningRef.current) {
+                  setTimeout(() => {
+                    if (shouldBeListeningRef.current && recognitionRef.current) {
+                      try {
+                        recognitionRef.current.start();
+                      } catch (retryErr) {
+                        console.error('❌ Retry failed:', retryErr);
+                        shouldBeListeningRef.current = false;
+                        setIsListening(false);
+                        setError('Voice session ended. Click the microphone to continue.');
+                      }
+                    }
+                  }, 300);
+                }
               }
             }
-          }, 100);
+          }, 200);
         } else {
           // User manually stopped, so update UI
           console.log('👤 User manually stopped');
