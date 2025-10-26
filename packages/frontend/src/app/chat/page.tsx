@@ -51,7 +51,7 @@ export default function ChatPage() {
       <header className="sticky top-0 z-10 bg-white dark:bg-neutral-800 md:border-b border-neutral-200 dark:border-neutral-700 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between safe-area-top shadow-sm md:shadow-none">
         <div className="flex items-center gap-3">
           <img
-            src="/images/logo-square.jpg"
+            src="/images/logo-square.png"
             alt="Meno.i Logo"
             className="h-10 w-10 md:h-8 md:w-auto object-contain rounded"
           />

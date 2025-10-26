@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   keywords: 'menopause, perimenopause, emotional support, AI companion',
   manifest: '/manifest.json',
   icons: {
-    icon: '/images/logo-square.jpg',
-    apple: '/images/logo-square.jpg',
+    icon: '/images/logo-square.png',
+    apple: '/images/logo-square.png',
   },
   viewport: {
     width: 'device-width',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     description: 'Emotional intelligence support for women navigating perimenopause and menopause',
     url: 'https://menoi.netlify.app',
     siteName: 'Meno.i',
-    images: ['/images/logo-square.jpg'],
+    images: ['/images/logo-square.png'],
   },
 }
 

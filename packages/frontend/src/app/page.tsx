@@ -58,7 +58,7 @@ export default function Home() {
         {/* Logo */}
         <div className="mb-6 flex justify-center">
           <img
-            src="/images/logo.jpeg"
+            src="/images/logo.jpg"
             alt="Meno.i Logo"
             className="h-16 w-auto object-contain"
           />

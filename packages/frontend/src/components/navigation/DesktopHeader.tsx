@@ -38,7 +38,7 @@ export default function DesktopHeader() {
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-2">
           <Image
-            src="/images/logo.jpeg"
+            src="/images/logo.jpg"
             alt="Meno.i Logo"
             width={40}
             height={40}

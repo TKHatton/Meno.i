@@ -72,7 +72,7 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
               </svg>
             </button>
             <img
-              src="/images/logo.jpeg"
+              src="/images/logo.jpg"
               alt="Meno.i Logo"
               className="h-8 w-auto object-contain"
             />

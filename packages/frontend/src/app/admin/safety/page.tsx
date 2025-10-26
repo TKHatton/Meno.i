@@ -124,7 +124,7 @@ export default function AdminSafetyPage() {
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-4">
             <img
-              src="/images/logo.jpeg"
+              src="/images/logo.jpg"
               alt="Meno.i Logo"
               className="h-8 w-auto object-contain"
             />

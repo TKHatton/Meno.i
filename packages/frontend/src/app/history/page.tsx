@@ -80,7 +80,7 @@ export default function HistoryPage() {
         <header className="bg-white border-b border-neutral-200 px-6 py-4">
           <div className="flex items-center gap-4">
             <img
-              src="/images/logo.jpeg"
+              src="/images/logo.jpg"
               alt="Meno.i Logo"
               className="h-8 w-auto object-contain"
             />
@@ -109,7 +109,7 @@ export default function HistoryPage() {
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center gap-4">
             <img
-              src="/images/logo.jpeg"
+              src="/images/logo.jpg"
               alt="Meno.i Logo"
               className="h-8 w-auto object-contain"
             />
