@@ -203,14 +203,6 @@ export default function SignInModal({ onClose, onSuccess }: SignInModalProps) {
             {mode === 'signin' ? 'Sign Up' : 'Sign In'}
           </button>
         </p>
-
-        {/* Guest Mode */}
-        <button
-          onClick={onClose}
-          className="w-full mt-4 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
-        >
-          Continue as guest
-        </button>
       </div>
     </div>
   );
