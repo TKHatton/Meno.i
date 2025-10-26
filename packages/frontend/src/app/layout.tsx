@@ -7,6 +7,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/components/auth/AuthProvider'
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext'
+import DesktopHeader from '@/components/navigation/DesktopHeader'
+import BottomNav from '@/components/navigation/BottomNav'
 // import AnalyticsProvider from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
@@ -56,7 +58,11 @@ export default function RootLayout({
         {/* Analytics temporarily disabled - enable when PostHog is configured */}
         <AccessibilityProvider>
           <AuthProvider>
-            {children}
+            <DesktopHeader />
+            <main id="main-content">
+              {children}
+            </main>
+            <BottomNav />
           </AuthProvider>
         </AccessibilityProvider>
       </body>
