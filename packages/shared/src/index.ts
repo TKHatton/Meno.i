@@ -7,6 +7,10 @@
 export * from './types/message';
 export * from './types/conversation';
 export * from './types/user';
+export * from './types/profile';
+export * from './types/symptom';
+export * from './types/journal';
+export * from './types/contact';
 
 // Prompt template exports
 export * from './prompts/templates';

@@ -75,7 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/chat`,
+          // Redirect to onboarding - it will check status and redirect appropriately
+          redirectTo: `${window.location.origin}/onboarding`,
         },
       });
       return { error };

@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import ChatInterface from '@/components/chat/ChatInterface';
 import SafetyModal from '@/components/safety/SafetyModal';
 import ProfileDropdown from '@/components/profile/ProfileDropdown';
@@ -13,13 +14,35 @@ import ProfileModal from '@/components/profile/ProfileModal';
 import AccessibilityMenu from '@/components/accessibility/AccessibilityMenu';
 
 import { useAuth } from '@/components/auth/AuthProvider';
+import { useOnboardingStatus } from '@/hooks/useOnboardingStatus';
 import type { ChatMode } from '@menoai/shared';
 
 export default function ChatPage() {
+  const router = useRouter();
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [chatMode, setChatMode] = useState<ChatMode>('women');
   const { user } = useAuth();
+  const { completed: onboardingCompleted, loading: onboardingLoading } = useOnboardingStatus();
+
+  // Redirect to onboarding if user hasn't completed it
+  useEffect(() => {
+    if (!onboardingLoading && user && !onboardingCompleted) {
+      router.push('/onboarding');
+    }
+  }, [user, onboardingCompleted, onboardingLoading, router]);
+
+  // Show loading state while checking onboarding status
+  if (onboardingLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-neutral-600 dark:text-neutral-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main id="main-content" className="h-screen mobile-full-height flex flex-col bg-neutral-50 dark:bg-neutral-900">
@@ -35,6 +58,26 @@ export default function ChatPage() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
+          {/* Track Symptoms Button */}
+          <button
+            onClick={() => router.push('/track')}
+            className="px-3 py-2 text-xs md:text-sm font-medium text-primary-600 dark:text-primary-400
+                     hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all"
+            title="Track your symptoms"
+          >
+            📊 Track
+          </button>
+
+          {/* Journal Button */}
+          <button
+            onClick={() => router.push('/journal')}
+            className="px-3 py-2 text-xs md:text-sm font-medium text-primary-600 dark:text-primary-400
+                     hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all"
+            title="Write in your journal"
+          >
+            📝 Journal
+          </button>
+
           {/* Chat Mode Selector */}
           <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-lg p-0.5 md:p-1">
             <button

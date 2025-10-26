@@ -9,6 +9,9 @@ import dotenv from 'dotenv';
 import healthRouter from './routes/health';
 import chatRouter from './routes/chat';
 import adminRouter from './routes/admin';
+import symptomsRouter from './routes/symptoms';
+import journalRouter from './routes/journal';
+import profileRouter from './routes/profile';
 import { initSentry } from './lib/sentry';
 import { generalLimiter } from './middleware/rateLimiter';
 
@@ -26,6 +29,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3000',
+  'http://127.0.0.1:3000', // Allow 127.0.0.1 (same as localhost)
   'https://studious-orbit-9vvxjj6wqwphpprj-3000.app.github.dev',
   'https://menoi.netlify.app',
   'https://www.menoi.netlify.app',
@@ -61,6 +65,10 @@ app.use((req, res, next) => {
 app.use('/api/health', healthRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/admin', adminRouter);
+// Free Tier routes
+app.use('/api/symptoms', symptomsRouter);
+app.use('/api/journal', journalRouter);
+app.use('/api/profile', profileRouter);
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
