@@ -36,17 +36,14 @@ export default function DesktopHeader() {
     <header className="hidden md:block sticky top-0 z-40 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center">
           <Image
             src="/images/logo.jpg"
             alt="Meno.i Logo"
-            width={40}
-            height={40}
+            width={56}
+            height={56}
             className="rounded-lg"
           />
-          <span className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
-            Meno.i
-          </span>
         </Link>
 
         {/* Center Navigation */}

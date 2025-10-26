@@ -93,15 +93,23 @@ export default function ProfileModal({ onClose, onSave }: ProfileModalProps) {
     if (!user || !e.target.files || !e.target.files[0]) return;
 
     const file = e.target.files[0];
+    console.log('📤 Starting image upload:', {
+      fileName: file.name,
+      fileType: file.type,
+      fileSize: file.size,
+      userId: user.id
+    });
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
+      console.error('❌ Invalid file type:', file.type);
       setError('Please upload an image file (PNG, JPG, etc.)');
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
+      console.error('❌ File too large:', file.size);
       setError('Image size must be less than 2MB');
       return;
     }
@@ -112,17 +120,24 @@ export default function ProfileModal({ onClose, onSave }: ProfileModalProps) {
     try {
       // Delete old avatar if exists
       if (profile.avatar_url && profile.avatar_url.includes('supabase.co/storage')) {
+        console.log('🗑️ Deleting old avatar:', profile.avatar_url);
         const oldPath = profile.avatar_url.split('/').pop();
         if (oldPath) {
-          await supabase.storage
+          const { error: deleteError } = await supabase.storage
             .from('avatars')
             .remove([`${user.id}/${oldPath}`]);
+
+          if (deleteError) {
+            console.warn('⚠️ Could not delete old avatar:', deleteError);
+            // Continue anyway - not critical
+          }
         }
       }
 
       // Upload new avatar
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      console.log('📁 Upload path:', fileName);
 
       const { error: uploadError, data } = await supabase.storage
         .from('avatars')
@@ -132,7 +147,11 @@ export default function ProfileModal({ onClose, onSave }: ProfileModalProps) {
         });
 
       if (uploadError) {
-        console.error('Error uploading image:', uploadError);
+        console.error('❌ Upload error:', {
+          message: uploadError.message,
+          status: (uploadError as any).statusCode,
+          error: uploadError
+        });
 
         // Provide more specific error messages
         if (uploadError.message.includes('Bucket not found')) {
@@ -145,17 +164,21 @@ export default function ProfileModal({ onClose, onSave }: ProfileModalProps) {
         return;
       }
 
+      console.log('✅ Upload successful:', data);
+
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
 
+      console.log('🔗 Public URL generated:', publicUrl);
+
       // Update profile state
       setProfile({ ...profile, avatar_url: publicUrl });
       setSuccess('Image uploaded! Click Save Changes to update your profile.');
     } catch (err) {
-      console.error('Error uploading image:', err);
-      setError('An unexpected error occurred while uploading');
+      console.error('❌ Unexpected error:', err);
+      setError(`An unexpected error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }
