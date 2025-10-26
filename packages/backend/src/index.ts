@@ -12,6 +12,7 @@ import adminRouter from './routes/admin';
 import symptomsRouter from './routes/symptoms';
 import journalRouter from './routes/journal';
 import profileRouter from './routes/profile';
+import insightsRouter from './routes/insights';
 import { initSentry } from './lib/sentry';
 import { generalLimiter } from './middleware/rateLimiter';
 
@@ -69,6 +70,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/symptoms', symptomsRouter);
 app.use('/api/journal', journalRouter);
 app.use('/api/profile', profileRouter);
+app.use('/api/insights', insightsRouter);
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

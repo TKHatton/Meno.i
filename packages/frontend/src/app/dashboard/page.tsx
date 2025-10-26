@@ -5,15 +5,26 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import DailyMessageEnhanced from '@/components/motivation/DailyMessageEnhanced';
 import Link from 'next/link';
 
+interface Insight {
+  type: 'pattern' | 'trend' | 'recommendation' | 'celebration';
+  title: string;
+  description: string;
+  icon: string;
+  actionable?: boolean;
+  action?: string;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const [insights, setInsights] = useState<Insight[]>([]);
+  const [loadingInsights, setLoadingInsights] = useState(true);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -21,6 +32,29 @@ export default function DashboardPage() {
       router.push('/');
     }
   }, [user, loading, router]);
+
+  // Fetch insights
+  useEffect(() => {
+    if (user) {
+      fetchInsights();
+    }
+  }, [user]);
+
+  const fetchInsights = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const response = await fetch(`${API_URL}/api/insights/${user!.id}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        setInsights(data.insights || []);
+      }
+    } catch (error) {
+      console.error('Error fetching insights:', error);
+    } finally {
+      setLoadingInsights(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -61,6 +95,78 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {/* Daily Message Card */}
           <DailyMessageEnhanced userJoinDate={userJoinDate} />
+
+          {/* AI Insights Section */}
+          {!loadingInsights && insights.length > 0 && (
+            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                  ✨ Your Insights
+                </h2>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  AI-powered
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {insights.map((insight, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg border-2 ${
+                      insight.type === 'celebration'
+                        ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                        : insight.type === 'pattern'
+                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+                        : insight.type === 'trend'
+                        ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
+                        : 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl flex-shrink-0">{insight.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <h3 className={`font-semibold mb-1 ${
+                          insight.type === 'celebration'
+                            ? 'text-green-900 dark:text-green-100'
+                            : insight.type === 'pattern'
+                            ? 'text-blue-900 dark:text-blue-100'
+                            : insight.type === 'trend'
+                            ? 'text-purple-900 dark:text-purple-100'
+                            : 'text-primary-900 dark:text-primary-100'
+                        }`}>
+                          {insight.title}
+                        </h3>
+                        <p className={`text-sm ${
+                          insight.type === 'celebration'
+                            ? 'text-green-700 dark:text-green-300'
+                            : insight.type === 'pattern'
+                            ? 'text-blue-700 dark:text-blue-300'
+                            : insight.type === 'trend'
+                            ? 'text-purple-700 dark:text-purple-300'
+                            : 'text-primary-700 dark:text-primary-300'
+                        }`}>
+                          {insight.description}
+                        </p>
+                        {insight.actionable && insight.action && (
+                          <button className={`mt-2 text-sm font-medium underline ${
+                            insight.type === 'celebration'
+                              ? 'text-green-800 dark:text-green-200 hover:text-green-900 dark:hover:text-green-100'
+                              : insight.type === 'pattern'
+                              ? 'text-blue-800 dark:text-blue-200 hover:text-blue-900 dark:hover:text-blue-100'
+                              : insight.type === 'trend'
+                              ? 'text-purple-800 dark:text-purple-200 hover:text-purple-900 dark:hover:text-purple-100'
+                              : 'text-primary-800 dark:text-primary-200 hover:text-primary-900 dark:hover:text-primary-100'
+                          }`}>
+                            {insight.action} →
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Quick Actions */}
           <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
