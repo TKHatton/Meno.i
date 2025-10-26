@@ -98,7 +98,8 @@ router.post('/send', async (req, res) => {
       message,
       conversationHistory,
       safetyCheck.isHighRisk,
-      chatMode
+      chatMode,
+      userId // Pass userId for personalization
     );
 
     // Save AI response to database (only if using database)
@@ -311,7 +312,8 @@ router.post('/send-stream', async (req, res) => {
       message,
       conversationHistory,
       safetyCheck.isHighRisk,
-      chatMode
+      chatMode,
+      userId // Pass userId for personalization
     );
 
     // Handle client disconnect

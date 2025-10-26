@@ -6,6 +6,7 @@
 import OpenAI from 'openai';
 import type { AIResponse, EmotionTag, NeedTag, ChatMode } from '@menoai/shared';
 import { SAFETY_RESPONSE_TEMPLATE, MAIN_SYSTEM_PROMPT, PARTNER_SYSTEM_PROMPT } from '@menoai/shared';
+import { getUserContext, buildPersonalizedContext } from './userContext';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -146,13 +147,15 @@ export async function generateMockResponse(
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
  * @param chatMode - Chat mode: 'women' or 'partners'
+ * @param userId - Optional user ID for personalization
  * @returns Structured AI response
  */
 export async function generateAIResponse(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
   isSafetyTriggered: boolean = false,
-  chatMode: ChatMode = 'women'
+  chatMode: ChatMode = 'women',
+  userId?: string
 ): Promise<AIResponse> {
 
   // If safety is triggered, return safety response immediately
@@ -176,8 +179,22 @@ export async function generateAIResponse(
   }
 
   try {
-    // Select system prompt based on chat mode
-    const systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+    // Select base system prompt based on chat mode
+    let systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+
+    // Fetch and inject user context if userId is provided
+    if (userId) {
+      console.log(`🔍 Fetching user context for personalization: ${userId}`);
+      const userContext = await getUserContext(userId);
+      const personalizedContext = buildPersonalizedContext(userContext);
+
+      if (personalizedContext) {
+        systemPrompt = systemPrompt + '\n\n' + personalizedContext;
+        console.log('✨ Personalized context injected into system prompt');
+      } else {
+        console.log('ℹ️  No user context available for personalization');
+      }
+    }
 
     // Build messages array for OpenAI
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
@@ -236,13 +253,15 @@ export async function generateAIResponse(
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
  * @param chatMode - Chat mode: 'women' or 'partners'
+ * @param userId - Optional user ID for personalization
  * @returns Async generator yielding response chunks
  */
 export async function* generateAIResponseStream(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
   isSafetyTriggered: boolean = false,
-  chatMode: ChatMode = 'women'
+  chatMode: ChatMode = 'women',
+  userId?: string
 ): AsyncGenerator<{ type: 'delta' | 'done'; content?: string; meta?: AIResponse }> {
 
   // If safety is triggered, yield the full safety response
@@ -286,8 +305,22 @@ export async function* generateAIResponseStream(
   }
 
   try {
-    // Select system prompt based on chat mode
-    const systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+    // Select base system prompt based on chat mode
+    let systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+
+    // Fetch and inject user context if userId is provided
+    if (userId) {
+      console.log(`🔍 Fetching user context for personalization (streaming): ${userId}`);
+      const userContext = await getUserContext(userId);
+      const personalizedContext = buildPersonalizedContext(userContext);
+
+      if (personalizedContext) {
+        systemPrompt = systemPrompt + '\n\n' + personalizedContext;
+        console.log('✨ Personalized context injected into system prompt (streaming)');
+      } else {
+        console.log('ℹ️  No user context available for personalization (streaming)');
+      }
+    }
 
     // Build messages array for OpenAI
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [

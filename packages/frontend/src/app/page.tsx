@@ -65,12 +65,11 @@ export default function Home() {
         </div>
 
         <p className="text-2xl text-neutral-700 dark:text-neutral-200 mb-4">
-          Your compassionate space for navigating menopause
+          First AI-powered perimenopause | menopause care with brains & balance
         </p>
 
         <p className="text-lg text-neutral-600 dark:text-neutral-300 mb-8 max-w-xl mx-auto">
-          Whether you're dealing with hot flashes, brain fog, mood swings, or just feeling
-          like a stranger in your own body, I'm here to listen without judgment.
+          Tracks your symptoms, not your patience. NLP | NVC coaching to keep the peace.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
