@@ -22,43 +22,6 @@ export interface Insight {
   action?: string;
 }
 
-/**
- * Generate mock insights for users with insufficient data
- */
-function generateMockInsights(): Insight[] {
-  return [
-    {
-      type: 'recommendation',
-      title: 'Start Tracking Your Journey',
-      description: 'Begin logging your symptoms daily to unlock personalized insights about your patterns and trends.',
-      icon: '📊',
-      actionable: true,
-      action: 'Track symptoms now'
-    },
-    {
-      type: 'recommendation',
-      title: 'Journal Your Thoughts',
-      description: 'Writing about your experiences can help you process emotions and identify triggers. Start with just 5 minutes today.',
-      icon: '✍️',
-      actionable: true,
-      action: 'Start journaling'
-    },
-    {
-      type: 'celebration',
-      title: 'Welcome to Your Health Journey',
-      description: 'Taking the first step to understand your body is powerful. You\'re in the right place.',
-      icon: '🌟',
-      actionable: false
-    },
-    {
-      type: 'recommendation',
-      title: 'Build Your Support Network',
-      description: 'Connect with your healthcare provider and loved ones about your menopause journey. You don\'t have to do this alone.',
-      icon: '🤝',
-      actionable: false
-    }
-  ];
-}
 
 /**
  * Generate AI-powered insights from user data
@@ -74,16 +37,16 @@ export async function generateInsights(userId: string): Promise<Insight[]> {
       getJournalEntries(userId, 30, 0)
     ]);
 
-    // If user has less than 7 days of data, return mock insights
+    // If user has less than 7 days of data, return empty array
     if (symptoms.length < 7 && journals.length < 3) {
-      console.log(`📊 User ${userId} has insufficient data. Returning mock insights.`);
-      return generateMockInsights();
+      console.log(`📊 User ${userId} has insufficient data. No insights available yet.`);
+      return [];
     }
 
-    // If OpenAI is not configured, return mock insights
+    // If OpenAI is not configured, return empty array
     if (!isOpenAIConfigured) {
-      console.warn('⚠️  OpenAI not configured. Returning mock insights.');
-      return generateMockInsights();
+      console.warn('⚠️  OpenAI not configured. No insights available.');
+      return [];
     }
 
     // Prepare data summary for AI analysis
@@ -162,8 +125,8 @@ Generate 3-4 personalized insights.`;
 
   } catch (error) {
     console.error('Error generating AI insights:', error);
-    // Fall back to mock insights on error
-    return generateMockInsights();
+    // Return empty array on error
+    return [];
   }
 }
 

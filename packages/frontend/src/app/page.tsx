@@ -74,47 +74,48 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link
-            href="/dashboard"
-            className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg
-                     hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
-          >
-            Start Chatting
-          </Link>
-
           {!user ? (
             <button
               onClick={() => setShowSignIn(true)}
-              className="px-8 py-4 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 font-semibold rounded-lg
-                       border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
+              className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg
+                       hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
             >
-              Sign In
+              Sign In to Get Started
             </button>
           ) : (
-            <div className="flex flex-col gap-3 items-center">
-              <div className="flex items-center gap-3">
-                <UserAvatar
-                  avatarUrl={avatarUrl}
-                  name={userName}
-                  email={userEmail}
-                  size="md"
-                />
-                <div className="flex flex-col items-start">
-                  <p className="text-neutral-900 font-medium">
-                    Welcome back, {userName || userEmail?.split('@')[0]}!
-                  </p>
-                  {userName && (
-                    <p className="text-sm text-neutral-500">{userEmail}</p>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={signOut}
-                className="text-sm text-neutral-500 hover:text-neutral-700 underline"
+            <>
+              <Link
+                href="/dashboard"
+                className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg
+                         hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
               >
-                Sign Out
-              </button>
-            </div>
+                Go to Dashboard
+              </Link>
+              <div className="flex flex-col gap-3 items-center">
+                <div className="flex items-center gap-3">
+                  <UserAvatar
+                    avatarUrl={avatarUrl}
+                    name={userName}
+                    email={userEmail}
+                    size="md"
+                  />
+                  <div className="flex flex-col items-start">
+                    <p className="text-neutral-900 dark:text-neutral-100 font-medium">
+                      Welcome back, {userName || userEmail?.split('@')[0]}!
+                    </p>
+                    {userName && (
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">{userEmail}</p>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={signOut}
+                  className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 underline"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </>
           )}
         </div>
 
