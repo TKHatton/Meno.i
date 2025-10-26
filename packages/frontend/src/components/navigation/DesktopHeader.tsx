@@ -45,12 +45,13 @@ export default function DesktopHeader() {
 
   const navLinks = [
     { name: 'Home', path: '/dashboard' },
+    { name: 'Chat', path: '/chat' },
     { name: 'Track', path: '/track' },
     { name: 'Journal', path: '/journal' },
   ];
 
-  // Don't show header on landing page, auth pages, or chat page (has custom header)
-  if (!user || pathname === '/' || pathname === '/login' || pathname === '/chat') {
+  // Don't show header on landing page or auth pages
+  if (!user || pathname === '/' || pathname === '/login') {
     return null;
   }
 
