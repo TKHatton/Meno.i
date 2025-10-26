@@ -6,13 +6,23 @@
 -- =====================================================
 
 -- =====================================================
--- FIX 1: Function Search Path Mutable
+-- STEP 1: Drop all triggers first (so functions can be dropped)
+-- =====================================================
+
+DROP TRIGGER IF EXISTS update_conversation_on_message ON messages;
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP TRIGGER IF EXISTS update_user_profile_timestamp_trigger ON user_profiles;
+DROP TRIGGER IF EXISTS update_symptom_log_timestamp_trigger ON symptom_logs;
+DROP TRIGGER IF EXISTS update_journal_entry_timestamp_trigger ON journal_entries;
+
+-- =====================================================
+-- STEP 2: Recreate Functions with Search Path Security
 -- =====================================================
 -- All functions need search_path set to prevent injection attacks
 -- Setting search_path = '' ensures functions only use fully qualified names
 
 -- Fix: update_conversation_timestamp
-DROP FUNCTION IF EXISTS update_conversation_timestamp();
+DROP FUNCTION IF EXISTS update_conversation_timestamp() CASCADE;
 CREATE OR REPLACE FUNCTION update_conversation_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -28,7 +38,7 @@ SET search_path = '';
 COMMENT ON FUNCTION update_conversation_timestamp IS 'Automatically updates conversation timestamp when messages are added (search_path secured)';
 
 -- Fix: anonymize_expired_conversations
-DROP FUNCTION IF EXISTS anonymize_expired_conversations();
+DROP FUNCTION IF EXISTS anonymize_expired_conversations() CASCADE;
 CREATE OR REPLACE FUNCTION anonymize_expired_conversations()
 RETURNS void AS $$
 BEGIN
@@ -56,7 +66,7 @@ SET search_path = '';
 COMMENT ON FUNCTION anonymize_expired_conversations IS 'Anonymizes data after 30-day retention period for GDPR compliance (search_path secured)';
 
 -- Fix: create_user_profile
-DROP FUNCTION IF EXISTS create_user_profile();
+DROP FUNCTION IF EXISTS create_user_profile() CASCADE;
 CREATE OR REPLACE FUNCTION create_user_profile()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -76,7 +86,7 @@ SET search_path = '';
 COMMENT ON FUNCTION create_user_profile IS 'Automatically creates user profile on signup with OAuth data (search_path secured)';
 
 -- Fix: update_user_profile_timestamp
-DROP FUNCTION IF EXISTS update_user_profile_timestamp();
+DROP FUNCTION IF EXISTS update_user_profile_timestamp() CASCADE;
 CREATE OR REPLACE FUNCTION update_user_profile_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -89,7 +99,7 @@ SET search_path = '';
 COMMENT ON FUNCTION update_user_profile_timestamp IS 'Automatically updates user_profiles.updated_at on UPDATE (search_path secured)';
 
 -- Fix: update_symptom_log_timestamp
-DROP FUNCTION IF EXISTS update_symptom_log_timestamp();
+DROP FUNCTION IF EXISTS update_symptom_log_timestamp() CASCADE;
 CREATE OR REPLACE FUNCTION update_symptom_log_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -102,7 +112,7 @@ SET search_path = '';
 COMMENT ON FUNCTION update_symptom_log_timestamp IS 'Automatically updates symptom_logs.updated_at on UPDATE (search_path secured)';
 
 -- Fix: update_journal_entry_timestamp
-DROP FUNCTION IF EXISTS update_journal_entry_timestamp();
+DROP FUNCTION IF EXISTS update_journal_entry_timestamp() CASCADE;
 CREATE OR REPLACE FUNCTION update_journal_entry_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -115,40 +125,35 @@ SET search_path = '';
 COMMENT ON FUNCTION update_journal_entry_timestamp IS 'Automatically updates journal_entries.updated_at on UPDATE (search_path secured)';
 
 -- =====================================================
--- RECREATE TRIGGERS (if needed)
+-- STEP 3: Recreate all triggers
 -- =====================================================
--- The triggers should still work, but recreating them ensures they're linked to the updated functions
+-- Now that functions are secured, recreate triggers to link them
 
 -- Trigger: update_conversation_on_message
-DROP TRIGGER IF EXISTS update_conversation_on_message ON messages;
 CREATE TRIGGER update_conversation_on_message
     AFTER INSERT ON messages
     FOR EACH ROW
     EXECUTE FUNCTION update_conversation_timestamp();
 
 -- Trigger: on_auth_user_created
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW
     EXECUTE FUNCTION create_user_profile();
 
 -- Trigger: update_user_profile_timestamp_trigger
-DROP TRIGGER IF EXISTS update_user_profile_timestamp_trigger ON user_profiles;
 CREATE TRIGGER update_user_profile_timestamp_trigger
     BEFORE UPDATE ON user_profiles
     FOR EACH ROW
     EXECUTE FUNCTION update_user_profile_timestamp();
 
 -- Trigger: update_symptom_log_timestamp_trigger
-DROP TRIGGER IF EXISTS update_symptom_log_timestamp_trigger ON symptom_logs;
 CREATE TRIGGER update_symptom_log_timestamp_trigger
     BEFORE UPDATE ON symptom_logs
     FOR EACH ROW
     EXECUTE FUNCTION update_symptom_log_timestamp();
 
 -- Trigger: update_journal_entry_timestamp_trigger
-DROP TRIGGER IF EXISTS update_journal_entry_timestamp_trigger ON journal_entries;
 CREATE TRIGGER update_journal_entry_timestamp_trigger
     BEFORE UPDATE ON journal_entries
     FOR EACH ROW
