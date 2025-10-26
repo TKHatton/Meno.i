@@ -8,11 +8,33 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { supabase } from '@/lib/supabase';
 
 export default function DesktopHeader() {
   const pathname = usePathname();
   const { user } = useAuth();
+  const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null);
+
+  // Load custom avatar from profile
+  useEffect(() => {
+    if (!user) return;
+
+    const loadCustomAvatar = async () => {
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('avatar_url')
+        .eq('id', user.id)
+        .single();
+
+      if (data?.avatar_url) {
+        setCustomAvatarUrl(data.avatar_url);
+      }
+    };
+
+    loadCustomAvatar();
+  }, [user]);
 
   const isActive = (path: string) => {
     if (path === '/dashboard') {
@@ -27,8 +49,8 @@ export default function DesktopHeader() {
     { name: 'Journal', path: '/journal' },
   ];
 
-  // Don't show header on landing page or auth pages
-  if (!user || pathname === '/' || pathname === '/login') {
+  // Don't show header on landing page, auth pages, or chat page (has custom header)
+  if (!user || pathname === '/' || pathname === '/login' || pathname === '/chat') {
     return null;
   }
 
@@ -81,9 +103,19 @@ export default function DesktopHeader() {
           </div>
           <Link
             href="/profile"
-            className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors"
+            className="w-10 h-10 rounded-full overflow-hidden hover:ring-2 hover:ring-primary-500 transition-all"
           >
-            {(user?.user_metadata?.name || user?.email || 'U').charAt(0).toUpperCase()}
+            {customAvatarUrl || user?.user_metadata?.avatar_url || user?.user_metadata?.picture ? (
+              <img
+                src={customAvatarUrl || user?.user_metadata?.avatar_url || user?.user_metadata?.picture}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold">
+                {(user?.user_metadata?.name || user?.email || 'U').charAt(0).toUpperCase()}
+              </div>
+            )}
           </Link>
         </div>
       </div>
