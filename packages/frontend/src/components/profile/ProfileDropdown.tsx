@@ -12,9 +12,10 @@ import UserAvatar from './UserAvatar';
 
 interface ProfileDropdownProps {
   onOpenProfile: () => void;
+  refreshTrigger?: number;
 }
 
-export default function ProfileDropdown({ onOpenProfile }: ProfileDropdownProps) {
+export default function ProfileDropdown({ onOpenProfile, refreshTrigger }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -37,7 +38,7 @@ export default function ProfileDropdown({ onOpenProfile }: ProfileDropdownProps)
     };
 
     loadCustomAvatar();
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

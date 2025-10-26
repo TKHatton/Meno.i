@@ -12,6 +12,7 @@ import UserAvatar from './UserAvatar';
 
 interface ProfileModalProps {
   onClose: () => void;
+  onSave?: () => void;
 }
 
 interface UserProfile {
@@ -21,7 +22,7 @@ interface UserProfile {
   avatar_url: string | null;
 }
 
-export default function ProfileModal({ onClose }: ProfileModalProps) {
+export default function ProfileModal({ onClose, onSave }: ProfileModalProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -188,9 +189,10 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
       } else {
         setSuccess('Profile updated successfully!');
         setTimeout(() => {
+          if (onSave) {
+            onSave();
+          }
           onClose();
-          // Refresh the page to show new avatar
-          window.location.reload();
         }, 1500);
       }
     } catch (err) {

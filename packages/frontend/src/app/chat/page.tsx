@@ -22,6 +22,7 @@ export default function ChatPage() {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [chatMode, setChatMode] = useState<ChatMode>('women');
+  const [avatarRefreshTrigger, setAvatarRefreshTrigger] = useState(0);
   const { user } = useAuth();
   const { completed: onboardingCompleted, loading: onboardingLoading } = useOnboardingStatus();
 
@@ -106,7 +107,10 @@ export default function ChatPage() {
 
           <AccessibilityMenu />
           {user ? (
-            <ProfileDropdown onOpenProfile={() => setShowProfileModal(true)} />
+            <ProfileDropdown
+              onOpenProfile={() => setShowProfileModal(true)}
+              refreshTrigger={avatarRefreshTrigger}
+            />
           ) : (
             <a
               href="/"
@@ -128,7 +132,10 @@ export default function ChatPage() {
 
       {/* Profile Modal */}
       {showProfileModal && (
-        <ProfileModal onClose={() => setShowProfileModal(false)} />
+        <ProfileModal
+          onClose={() => setShowProfileModal(false)}
+          onSave={() => setAvatarRefreshTrigger(prev => prev + 1)}
+        />
       )}
     </main>
   );
