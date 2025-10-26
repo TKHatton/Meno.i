@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'Meno.i',
   },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   openGraph: {
     title: 'Meno.i - Your Compassionate Menopause Companion',
     description: 'Emotional intelligence support for women navigating perimenopause and menopause',

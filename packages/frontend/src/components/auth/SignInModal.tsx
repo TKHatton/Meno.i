@@ -33,17 +33,30 @@ export default function SignInModal({ onClose, onSuccess }: SignInModalProps) {
         : await signUp(email, password);
 
       if (error) {
-        setError(error.message);
+        // Provide more helpful error messages
+        if (error.message.includes('Invalid login credentials')) {
+          setError(mode === 'signin'
+            ? 'Invalid email or password. Please try again or sign up if you don\'t have an account yet.'
+            : error.message
+          );
+        } else if (error.message.includes('Email not confirmed')) {
+          setError('Please check your email and click the confirmation link before signing in.');
+        } else if (error.message.includes('User already registered')) {
+          setError('This email is already registered. Please sign in instead.');
+        } else {
+          setError(error.message);
+        }
       } else {
         if (mode === 'signup') {
-          setError('Check your email to confirm your account!');
+          setError('Success! Check your email to confirm your account, then sign in.');
         } else {
           onSuccess?.();
           onClose();
         }
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      console.error('Auth error:', err);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -82,12 +95,12 @@ export default function SignInModal({ onClose, onSuccess }: SignInModalProps) {
           </button>
         </div>
 
-        {/* Error Message */}
+        {/* Error/Success Message */}
         {error && (
           <div className={`mb-4 p-3 rounded-lg text-sm ${
-            error.includes('Check your email')
-              ? 'bg-green-50 text-green-800'
-              : 'bg-red-50 text-red-800'
+            error.includes('Success') || error.includes('Check your email')
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-800 border border-red-200'
           }`}>
             {error}
           </div>
