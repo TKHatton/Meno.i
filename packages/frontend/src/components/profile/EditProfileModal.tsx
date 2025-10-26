@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { supabase } from '@/lib/supabase';
 
 interface EditProfileModalProps {
   profile: any;
@@ -23,16 +24,25 @@ export default function EditProfileModal({ profile, onClose, onSave }: EditProfi
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user) return;
+
+    console.log('📤 Starting avatar upload:', {
+      fileName: file.name,
+      fileType: file.type,
+      fileSize: file.size,
+      userId: user.id
+    });
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
+      console.error('❌ Invalid file type:', file.type);
       alert('Please upload an image file');
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
+      console.error('❌ File too large:', file.size);
       alert('Image must be less than 2MB');
       return;
     }
@@ -40,25 +50,50 @@ export default function EditProfileModal({ profile, onClose, onSave }: EditProfi
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-      formData.append('userId', user!.id);
+      // Delete old avatar if exists
+      if (avatarUrl && avatarUrl.includes('supabase.co/storage')) {
+        console.log('🗑️ Deleting old avatar:', avatarUrl);
+        const oldPath = avatarUrl.split('/').pop();
+        if (oldPath) {
+          const { error: deleteError } = await supabase.storage
+            .from('avatars')
+            .remove([`${user.id}/${oldPath}`]);
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const response = await fetch(`${API_URL}/api/profile/upload-avatar`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setAvatarUrl(data.avatarUrl);
-      } else {
-        throw new Error('Upload failed');
+          if (deleteError) {
+            console.warn('⚠️ Could not delete old avatar:', deleteError);
+          }
+        }
       }
+
+      // Upload new avatar to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      console.log('📁 Upload path:', fileName);
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('❌ Upload error:', uploadError);
+        throw new Error(uploadError.message);
+      }
+
+      console.log('✅ Upload successful:', data);
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      console.log('🔗 Public URL generated:', publicUrl);
+      setAvatarUrl(publicUrl);
     } catch (error) {
-      console.error('Error uploading avatar:', error);
-      alert('Failed to upload avatar. Please try again.');
+      console.error('❌ Error uploading avatar:', error);
+      alert(`Failed to upload avatar: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }
