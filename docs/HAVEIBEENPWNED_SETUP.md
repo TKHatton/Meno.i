@@ -4,9 +4,11 @@ The Supabase UI has changed! Here's how to find and enable the HaveIBeenPwned pa
 
 ---
 
-## ✅ CONFIRMED LOCATION (Latest Supabase UI)
+## ⚠️ IMPORTANT: UI Varies by Supabase Version
 
-### Attack Protection → Prevent use of leaked passwords
+**The exact location of this setting varies significantly between Supabase versions and project configurations.** The steps below are common locations, but you may need to explore your specific UI.
+
+### Common Location 1: Attack Protection
 
 1. Go to **Supabase Dashboard**
 2. Click **"Authentication"** in the left sidebar
@@ -15,7 +17,15 @@ The Supabase UI has changed! Here's how to find and enable the HaveIBeenPwned pa
 5. **Toggle it ON** (should turn blue/green)
 6. Click **"Save"** or **"Update"**
 
-**That's it!** This is the HaveIBeenPwned password breach detection setting.
+### Common Location 2: Various Auth Settings
+
+The setting may appear under different names:
+- "Prevent use of leaked passwords"
+- "Password breach detection"
+- "HaveIBeenPwned protection"
+- "Check passwords against breach database"
+
+**If you don't see it in the locations below, explore your Authentication settings - it's there somewhere!**
 
 ---
 
