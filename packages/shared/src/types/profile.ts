@@ -42,6 +42,8 @@ export interface UserProfile {
   menopause_stage?: MenopauseStage;
   primary_concerns?: PrimaryConcern[];
   onboarding_completed: boolean;
+  // User preferences
+  preferences?: any;
   created_at: string;
   updated_at: string;
 }
@@ -57,6 +59,7 @@ export interface UpdateProfileDTO {
   menopause_stage?: MenopauseStage;
   primary_concerns?: PrimaryConcern[];
   onboarding_completed?: boolean;
+  preferences?: any;
 }
 
 /**
