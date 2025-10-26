@@ -6,6 +6,8 @@
 'use client';
 
 import { useState } from 'react';
+import { getSelectedClasses, getRadioClasses, getCheckboxClasses, getButtonClasses } from '@/utils/colorScheme';
+import type { UserMode } from '@/hooks/useUserMode';
 
 interface JourneyStepProps {
   initialStage: string;
@@ -94,6 +96,9 @@ export default function JourneyStep({
     initialStage?.startsWith('supporting_') || false
   );
 
+  // Determine color mode based on selection
+  const colorMode: UserMode = isSupportingPartner ? 'man' : 'woman';
+
   const handleConcernToggle = (concernValue: string) => {
     if (concerns.includes(concernValue)) {
       // Remove concern
@@ -160,11 +165,12 @@ export default function JourneyStep({
                 setStageError('');
               }}
               className={`
-                px-6 py-4 rounded-lg border-2 font-medium
+                px-6 py-4 rounded-lg font-medium
                 transition-all duration-200
+                ${getSelectedClasses('woman', !isSupportingPartner)}
                 ${!isSupportingPartner
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                  : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 text-neutral-700 dark:text-neutral-300'
+                  ? 'text-primary-700 dark:text-primary-300'
+                  : 'text-neutral-700 dark:text-neutral-300'
                 }
               `}
             >
@@ -178,11 +184,12 @@ export default function JourneyStep({
                 setStageError('');
               }}
               className={`
-                px-6 py-4 rounded-lg border-2 font-medium
+                px-6 py-4 rounded-lg font-medium
                 transition-all duration-200
+                ${getSelectedClasses('man', isSupportingPartner)}
                 ${isSupportingPartner
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                  : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 text-neutral-700 dark:text-neutral-300'
+                  ? 'text-primary-700 dark:text-primary-300'
+                  : 'text-neutral-700 dark:text-neutral-300'
                 }
               `}
             >
@@ -208,21 +215,15 @@ export default function JourneyStep({
                   setStageError('');
                 }}
                 className={`
-                  w-full text-left px-4 py-4 rounded-lg border-2
+                  w-full text-left px-4 py-4 rounded-lg
                   transition-all duration-200
-                  ${stage === option.value
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                    : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
-                  }
+                  ${getSelectedClasses(colorMode, stage === option.value)}
                 `}
               >
                 <div className="flex items-center">
                   <div className={`
                     w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center
-                    ${stage === option.value
-                      ? 'border-primary-500 bg-primary-500'
-                      : 'border-neutral-300 dark:border-neutral-600'
-                    }
+                    ${getRadioClasses(colorMode, stage === option.value)}
                   `}>
                     {stage === option.value && (
                       <div className="w-2 h-2 bg-white rounded-full" />
@@ -261,12 +262,9 @@ export default function JourneyStep({
                 onClick={() => handleConcernToggle(concern.value)}
                 disabled={!concerns.includes(concern.value) && concerns.length >= 2}
                 className={`
-                  text-left px-4 py-3 rounded-lg border-2
+                  text-left px-4 py-3 rounded-lg
                   transition-all duration-200
-                  ${concerns.includes(concern.value)
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                    : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
-                  }
+                  ${getSelectedClasses(colorMode, concerns.includes(concern.value))}
                   ${!concerns.includes(concern.value) && concerns.length >= 2
                     ? 'opacity-50 cursor-not-allowed'
                     : ''
@@ -276,10 +274,7 @@ export default function JourneyStep({
                 <div className="flex items-center">
                   <div className={`
                     w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${concerns.includes(concern.value)
-                      ? 'border-primary-500 bg-primary-500'
-                      : 'border-neutral-300 dark:border-neutral-600'
-                    }
+                    ${getCheckboxClasses(colorMode, concerns.includes(concern.value))}
                   `}>
                     {concerns.includes(concern.value) && (
                       <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -320,12 +315,9 @@ export default function JourneyStep({
           <button
             type="submit"
             disabled={!stage || concerns.length === 0 || isSubmitting}
-            className="px-6 py-4 flex-1 bg-gradient-to-r from-primary-600 to-primary-500
-                     text-white font-semibold rounded-lg
-                     hover:from-primary-700 hover:to-primary-600
+            className={`px-6 py-4 flex-1 ${getButtonClasses(colorMode, 'primary')}
                      focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                     transition-all duration-200 shadow-md hover:shadow-lg
-                     disabled:opacity-50 disabled:cursor-not-allowed"
+                     disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {isSubmitting ? 'Getting Started...' : 'Get Started'}
           </button>

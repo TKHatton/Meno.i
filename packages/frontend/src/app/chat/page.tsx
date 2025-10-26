@@ -12,6 +12,8 @@ import SafetyModal from '@/components/safety/SafetyModal';
 
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useOnboardingStatus } from '@/hooks/useOnboardingStatus';
+import { useUserMode } from '@/hooks/useUserMode';
+import { getSelectedClasses } from '@/utils/colorScheme';
 import type { ChatMode } from '@menoai/shared';
 
 export default function ChatPage() {
@@ -20,6 +22,7 @@ export default function ChatPage() {
   const [chatMode, setChatMode] = useState<ChatMode>('woman');
   const { user } = useAuth();
   const { completed: onboardingCompleted, loading: onboardingLoading } = useOnboardingStatus();
+  const { mode: userMode } = useUserMode();
 
   // Redirect to onboarding if user hasn't completed it
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function ChatPage() {
           onClick={() => setChatMode('woman')}
           className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
             chatMode === 'woman'
-              ? 'bg-primary-600 text-white shadow-sm'
+              ? `${userMode === 'woman' ? 'bg-primary-600' : 'bg-primary-500'} text-white shadow-sm`
               : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
           }`}
           aria-label="Chat mode for women"
@@ -60,7 +63,7 @@ export default function ChatPage() {
           onClick={() => setChatMode('man')}
           className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
             chatMode === 'man'
-              ? 'bg-primary-600 text-white shadow-sm'
+              ? `${userMode === 'man' ? 'bg-primary-700' : 'bg-primary-600'} text-white shadow-sm`
               : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
           }`}
           aria-label="Chat mode for men supporting their partners"
