@@ -17,7 +17,7 @@ import type { ChatMode } from '@menoai/shared';
 export default function ChatPage() {
   const router = useRouter();
   const [showSafetyModal, setShowSafetyModal] = useState(false);
-  const [chatMode, setChatMode] = useState<ChatMode>('women');
+  const [chatMode, setChatMode] = useState<ChatMode>('woman');
   const { user } = useAuth();
   const { completed: onboardingCompleted, loading: onboardingLoading } = useOnboardingStatus();
 
@@ -44,28 +44,28 @@ export default function ChatPage() {
     <main id="main-content" className="h-screen mobile-full-height flex flex-col bg-neutral-50 dark:bg-neutral-900">
       {/* Chat Mode Selector */}
       <div className="hidden md:flex items-center justify-center gap-2 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-4 py-2">
-        <span className="text-sm text-neutral-600 dark:text-neutral-400 mr-2">Chat Mode:</span>
+        <span className="text-sm text-neutral-600 dark:text-neutral-400 mr-2">I am a:</span>
         <button
-          onClick={() => setChatMode('women')}
+          onClick={() => setChatMode('woman')}
           className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
-            chatMode === 'women'
+            chatMode === 'woman'
               ? 'bg-primary-600 text-white shadow-sm'
               : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
           }`}
           aria-label="Chat mode for women"
         >
-          Women
+          Woman
         </button>
         <button
-          onClick={() => setChatMode('partners')}
+          onClick={() => setChatMode('man')}
           className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
-            chatMode === 'partners'
+            chatMode === 'man'
               ? 'bg-primary-600 text-white shadow-sm'
               : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
           }`}
-          aria-label="Chat mode for partners"
+          aria-label="Chat mode for men supporting their partners"
         >
-          Partners
+          Man
         </button>
       </div>
 

@@ -32,7 +32,7 @@ router.use(chatLimiter);
  */
 router.post('/send', async (req, res) => {
   try {
-    const { message, conversationId, userId, chatMode = 'women' } = req.body;
+    const { message, conversationId, userId, chatMode = 'woman' } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
@@ -238,7 +238,7 @@ router.delete('/conversation/:conversationId', async (req, res) => {
  */
 router.post('/send-stream', async (req, res) => {
   try {
-    const { message, conversationId, userId, chatMode = 'women' } = req.body;
+    const { message, conversationId, userId, chatMode = 'woman' } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });

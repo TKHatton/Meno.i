@@ -42,6 +42,29 @@ const MENOPAUSE_STAGES = [
   },
 ];
 
+const SUPPORTING_PARTNER_STAGES = [
+  {
+    value: 'supporting_perimenopause',
+    label: 'Perimenopause',
+    description: 'Symptoms but still menstruating',
+  },
+  {
+    value: 'supporting_menopause',
+    label: 'Menopause',
+    description: '12+ months without period',
+  },
+  {
+    value: 'supporting_postmenopause',
+    label: 'Post-menopause',
+    description: 'Past the menopause transition',
+  },
+  {
+    value: 'supporting_unsure',
+    label: 'Not sure',
+    description: "Still figuring it out together",
+  },
+];
+
 const PRIMARY_CONCERNS = [
   { value: 'hot_flashes', label: 'Hot flashes' },
   { value: 'sleep_issues', label: 'Sleep issues' },
@@ -67,6 +90,9 @@ export default function JourneyStep({
   const [stageError, setStageError] = useState('');
   const [concernsError, setConcernsError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSupportingPartner, setIsSupportingPartner] = useState(
+    initialStage?.startsWith('supporting_') || false
+  );
 
   const handleConcernToggle = (concernValue: string) => {
     if (concerns.includes(concernValue)) {
@@ -120,13 +146,60 @@ export default function JourneyStep({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Who is this for? */}
+        <div>
+          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-4">
+            Who is this for?
+          </label>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <button
+              type="button"
+              onClick={() => {
+                setIsSupportingPartner(false);
+                setStage('');
+                setStageError('');
+              }}
+              className={`
+                px-6 py-4 rounded-lg border-2 font-medium
+                transition-all duration-200
+                ${!isSupportingPartner
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 text-neutral-700 dark:text-neutral-300'
+                }
+              `}
+            >
+              For me
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSupportingPartner(true);
+                setStage('');
+                setStageError('');
+              }}
+              className={`
+                px-6 py-4 rounded-lg border-2 font-medium
+                transition-all duration-200
+                ${isSupportingPartner
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 text-neutral-700 dark:text-neutral-300'
+                }
+              `}
+            >
+              Supporting my partner
+            </button>
+          </div>
+        </div>
+
         {/* Menopause Stage */}
         <div>
           <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-4">
-            Where are you in your menopause journey?
+            {isSupportingPartner
+              ? "What stage is your partner at?"
+              : "Where are you in your menopause journey?"}
           </label>
           <div className="space-y-3">
-            {MENOPAUSE_STAGES.map((option) => (
+            {(isSupportingPartner ? SUPPORTING_PARTNER_STAGES : MENOPAUSE_STAGES).map((option) => (
               <button
                 key={option.value}
                 type="button"

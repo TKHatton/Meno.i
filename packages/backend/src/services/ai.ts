@@ -5,7 +5,7 @@
 
 import OpenAI from 'openai';
 import type { AIResponse, EmotionTag, NeedTag, ChatMode } from '@menoai/shared';
-import { SAFETY_RESPONSE_TEMPLATE, MAIN_SYSTEM_PROMPT, PARTNER_SYSTEM_PROMPT } from '@menoai/shared';
+import { SAFETY_RESPONSE_TEMPLATE, MAIN_SYSTEM_PROMPT, MAN_SYSTEM_PROMPT } from '@menoai/shared';
 import { getUserContext, buildPersonalizedContext } from './userContext';
 
 // Initialize OpenAI client
@@ -146,7 +146,7 @@ export async function generateMockResponse(
  * @param message - User's current message
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
- * @param chatMode - Chat mode: 'women' or 'partners'
+ * @param chatMode - Chat mode: 'woman' or 'man'
  * @param userId - Optional user ID for personalization
  * @returns Structured AI response
  */
@@ -154,7 +154,7 @@ export async function generateAIResponse(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
   isSafetyTriggered: boolean = false,
-  chatMode: ChatMode = 'women',
+  chatMode: ChatMode = 'woman',
   userId?: string
 ): Promise<AIResponse> {
 
@@ -180,7 +180,7 @@ export async function generateAIResponse(
 
   try {
     // Select base system prompt based on chat mode
-    let systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+    let systemPrompt = chatMode === 'man' ? MAN_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
 
     // Fetch and inject user context if userId is provided
     if (userId) {
@@ -252,7 +252,7 @@ export async function generateAIResponse(
  * @param message - User's current message
  * @param conversationHistory - Previous messages for context
  * @param isSafetyTriggered - Whether safety escalation was triggered
- * @param chatMode - Chat mode: 'women' or 'partners'
+ * @param chatMode - Chat mode: 'woman' or 'man'
  * @param userId - Optional user ID for personalization
  * @returns Async generator yielding response chunks
  */
@@ -260,7 +260,7 @@ export async function* generateAIResponseStream(
   message: string,
   conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = [],
   isSafetyTriggered: boolean = false,
-  chatMode: ChatMode = 'women',
+  chatMode: ChatMode = 'woman',
   userId?: string
 ): AsyncGenerator<{ type: 'delta' | 'done'; content?: string; meta?: AIResponse }> {
 
@@ -306,7 +306,7 @@ export async function* generateAIResponseStream(
 
   try {
     // Select base system prompt based on chat mode
-    let systemPrompt = chatMode === 'partners' ? PARTNER_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
+    let systemPrompt = chatMode === 'man' ? MAN_SYSTEM_PROMPT : MAIN_SYSTEM_PROMPT;
 
     // Fetch and inject user context if userId is provided
     if (userId) {

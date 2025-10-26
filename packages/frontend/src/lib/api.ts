@@ -31,7 +31,7 @@ export async function sendMessage(
       message,
       conversationId,
       userId,
-      chatMode: chatMode || 'women',
+      chatMode: chatMode || 'woman',
     }),
   });
 
@@ -78,7 +78,7 @@ export async function sendMessageStream(
         message,
         conversationId,
         userId,
-        chatMode: chatMode || 'women',
+        chatMode: chatMode || 'woman',
       }),
     });
 

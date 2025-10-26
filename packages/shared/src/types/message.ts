@@ -5,7 +5,7 @@
 
 export type MessageRole = 'user' | 'ai';
 
-export type ChatMode = 'women' | 'partners';
+export type ChatMode = 'woman' | 'man';
 
 export type EmotionTag =
   | 'sadness'

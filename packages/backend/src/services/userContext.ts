@@ -148,7 +148,11 @@ function buildProfileSection(profile: UserProfile): string {
       'menopause': 'Menopause (no period for 12+ months)',
       'postmenopause': 'Postmenopause (years after menopause)',
       'unsure': 'Unsure of their stage',
-      'learning': 'Learning about menopause (may be supporting someone)'
+      'learning': 'Learning about menopause (may be supporting someone)',
+      'supporting_perimenopause': 'Supporting partner in Perimenopause',
+      'supporting_menopause': 'Supporting partner in Menopause',
+      'supporting_postmenopause': 'Supporting partner in Postmenopause',
+      'supporting_unsure': 'Supporting partner (stage unsure)'
     };
     parts.push(`Menopause Stage: ${stageLabels[profile.menopause_stage as MenopauseStage]}`);
   }

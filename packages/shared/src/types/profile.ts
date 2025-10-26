@@ -10,7 +10,11 @@ export type MenopauseStage =
   | 'menopause'
   | 'postmenopause'
   | 'unsure'
-  | 'learning';
+  | 'learning'
+  | 'supporting_perimenopause'
+  | 'supporting_menopause'
+  | 'supporting_postmenopause'
+  | 'supporting_unsure';
 
 /**
  * Primary concern options for onboarding
