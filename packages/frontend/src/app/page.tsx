@@ -75,7 +75,7 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link
-            href="/chat"
+            href="/dashboard"
             className="px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg
                      hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
           >

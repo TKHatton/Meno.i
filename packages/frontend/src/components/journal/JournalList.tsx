@@ -203,6 +203,30 @@ interface EntryCardProps {
 
 function EntryCard({ entry, onEdit, onDelete }: EntryCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Load favorite status from localStorage
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteJournalEntries') || '[]');
+    setIsFavorite(favorites.includes(entry.id));
+  }, [entry.id]);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card expansion
+    const favorites = JSON.parse(localStorage.getItem('favoriteJournalEntries') || '[]');
+
+    if (isFavorite) {
+      // Remove from favorites
+      const newFavorites = favorites.filter((id: string) => id !== entry.id);
+      localStorage.setItem('favoriteJournalEntries', JSON.stringify(newFavorites));
+      setIsFavorite(false);
+    } else {
+      // Add to favorites
+      favorites.push(entry.id);
+      localStorage.setItem('favoriteJournalEntries', JSON.stringify(favorites));
+      setIsFavorite(true);
+    }
+  };
 
   const date = new Date(entry.entry_date);
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -241,6 +265,12 @@ function EntryCard({ entry, onEdit, onDelete }: EntryCardProps) {
                 <span>{moodInfo.label}</span>
               </div>
             )}
+            {/* Favorite Badge */}
+            {isFavorite && (
+              <span className="text-red-500" title="Favorite">
+                ❤️
+              </span>
+            )}
           </div>
           <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">
             {formattedTime}
@@ -273,6 +303,24 @@ function EntryCard({ entry, onEdit, onDelete }: EntryCardProps) {
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-600">
+            <button
+              onClick={toggleFavorite}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
+                isFavorite
+                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50'
+                  : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+              }`}
+            >
+              <svg
+                className={`w-4 h-4 ${isFavorite ? 'fill-current' : 'fill-none'}`}
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              {isFavorite ? 'Unfavorite' : 'Favorite'}
+            </button>
             <button
               onClick={() => onEdit(entry.id)}
               className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg

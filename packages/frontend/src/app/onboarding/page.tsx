@@ -31,7 +31,7 @@ export default function OnboardingPage() {
   // Redirect if already completed onboarding
   useEffect(() => {
     if (!onboardingLoading && onboardingCompleted) {
-      router.push('/chat');
+      router.push('/dashboard');
     }
   }, [onboardingCompleted, onboardingLoading, router]);
 
@@ -81,9 +81,9 @@ export default function OnboardingPage() {
         throw new Error(`Failed to save profile: ${JSON.stringify(data)}`);
       }
 
-      console.log('✅ Onboarding saved! Redirecting to /chat...');
-      // Redirect to dashboard/chat
-      router.push('/chat');
+      console.log('✅ Onboarding saved! Redirecting to /dashboard...');
+      // Redirect to dashboard
+      router.push('/dashboard');
     } catch (error) {
       console.error('❌ Error saving profile:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
