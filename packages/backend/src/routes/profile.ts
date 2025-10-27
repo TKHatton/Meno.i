@@ -353,28 +353,157 @@ router.post('/change-password', async (req, res) => {
 });
 
 /**
- * DELETE /api/profile/delete-account
- * Delete user account and all associated data
+ * POST /api/profile/request-deletion
+ * Request account deletion - sends confirmation code to user's email
  *
- * Body: { userId, password }
- * Response: { success: true }
+ * Body: { userId, confirmationText }
+ * Response: { success: true, message: string }
  */
-router.delete('/delete-account', async (req, res) => {
+router.post('/request-deletion', async (req, res) => {
   try {
-    const { userId, password } = req.body;
+    const { userId, confirmationText } = req.body;
 
     if (!isSupabaseConfigured) {
       return res.status(503).json({ error: 'Database not configured' });
     }
 
-    if (!userId || !password) {
+    if (!userId || !confirmationText) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    console.log(`🗑️  Deleting account for user ${userId}`);
+    // Validate confirmation text (case-insensitive)
+    if (confirmationText.toUpperCase() !== 'DELETE') {
+      return res.status(400).json({ error: 'Invalid confirmation text. Please type DELETE to confirm.' });
+    }
+
+    console.log(`📧 Requesting account deletion for user ${userId}`);
+
+    // Import required modules
+    const { supabaseAdmin } = await import('../lib/supabase');
+    const { sendDeletionConfirmationEmail } = await import('../lib/email');
+
+    // Get user's email
+    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+    if (userError || !userData?.user?.email) {
+      return res.status(404).json({ error: 'User not found or has no email' });
+    }
+
+    // Generate 6-digit confirmation code
+    const confirmationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Delete any existing confirmation codes for this user
+    await supabaseAdmin
+      .from('deletion_confirmations')
+      .delete()
+      .eq('user_id', userId);
+
+    // Store confirmation code in database
+    const { error: insertError } = await supabaseAdmin
+      .from('deletion_confirmations')
+      .insert({
+        user_id: userId,
+        confirmation_code: confirmationCode,
+        expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
+      });
+
+    if (insertError) {
+      console.error('Error storing confirmation code:', insertError);
+      return res.status(500).json({ error: 'Failed to generate confirmation code' });
+    }
+
+    // Send confirmation email
+    const emailSent = await sendDeletionConfirmationEmail(userData.user.email, confirmationCode);
+
+    if (!emailSent) {
+      console.warn('Failed to send confirmation email, but code was stored');
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Confirmation code sent to your email. Please check your inbox.',
+    });
+  } catch (error) {
+    console.error('Error requesting account deletion:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * DELETE /api/profile/delete-account
+ * Delete user account and all associated data
+ *
+ * Body: { userId, confirmationCode?, confirmationText? }
+ * Response: { success: true }
+ */
+router.delete('/delete-account', async (req, res) => {
+  try {
+    const { userId, confirmationCode, confirmationText } = req.body;
+
+    if (!isSupabaseConfigured) {
+      return res.status(503).json({ error: 'Database not configured' });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing userId' });
+    }
 
     // Import supabaseAdmin
     const { supabaseAdmin } = await import('../lib/supabase');
+
+    // Check if email confirmation is enabled
+    const emailConfirmationEnabled = process.env.REQUIRE_EMAIL_CONFIRMATION === 'true';
+
+    if (emailConfirmationEnabled) {
+      // Email confirmation flow
+      if (!confirmationCode) {
+        return res.status(400).json({ error: 'Missing confirmation code' });
+      }
+
+      console.log(`🗑️  Verifying confirmation code for user ${userId}`);
+
+      // Verify confirmation code
+      const { data: confirmationData, error: confirmationError } = await supabaseAdmin
+        .from('deletion_confirmations')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('confirmation_code', confirmationCode)
+        .eq('used', false)
+        .single();
+
+      if (confirmationError || !confirmationData) {
+        return res.status(400).json({
+          error: 'Invalid or expired confirmation code. Please request a new code.',
+        });
+      }
+
+      // Check if code is expired
+      if (new Date(confirmationData.expires_at) < new Date()) {
+        return res.status(400).json({
+          error: 'Confirmation code has expired. Please request a new code.',
+        });
+      }
+
+      // Mark confirmation as used
+      await supabaseAdmin
+        .from('deletion_confirmations')
+        .update({ used: true })
+        .eq('id', confirmationData.id);
+
+      console.log(`✅ Confirmation code verified. Deleting account for user ${userId}`);
+    } else {
+      // Simple text confirmation flow (no email required)
+      if (!confirmationText) {
+        return res.status(400).json({ error: 'Missing confirmation text' });
+      }
+
+      // Validate confirmation text (case-insensitive)
+      if (confirmationText.toUpperCase() !== 'DELETE') {
+        return res.status(400).json({ error: 'Invalid confirmation text. Please type DELETE to confirm.' });
+      }
+
+      console.log(`✅ Text confirmation verified. Deleting account for user ${userId}`);
+    }
 
     // Delete all user data (cascade delete should handle this via foreign keys)
     // But we'll be explicit for safety
@@ -382,6 +511,7 @@ router.delete('/delete-account', async (req, res) => {
       supabaseAdmin.from('symptom_logs').delete().eq('user_id', userId),
       supabaseAdmin.from('journal_entries').delete().eq('user_id', userId),
       supabaseAdmin.from('user_profiles').delete().eq('id', userId),
+      supabaseAdmin.from('deletion_confirmations').delete().eq('user_id', userId),
     ]);
 
     // Delete auth user (this is the final step)
