@@ -60,7 +60,17 @@ router.post('/:userId', async (req, res) => {
     }
 
     // Validate menopause_stage if provided
-    const validStages = ['perimenopause', 'menopause', 'postmenopause', 'unsure', 'learning'];
+    const validStages = [
+      'perimenopause',
+      'menopause',
+      'postmenopause',
+      'unsure',
+      'learning',
+      'supporting_perimenopause',
+      'supporting_menopause',
+      'supporting_postmenopause',
+      'supporting_unsure',
+    ];
     if (profileData.menopause_stage && !validStages.includes(profileData.menopause_stage)) {
       return res.status(400).json({
         error: `menopause_stage must be one of: ${validStages.join(', ')}`,
@@ -139,7 +149,17 @@ router.put('/:userId', async (req, res) => {
     }
 
     // Same validation as POST
-    const validStages = ['perimenopause', 'menopause', 'postmenopause', 'unsure', 'learning'];
+    const validStages = [
+      'perimenopause',
+      'menopause',
+      'postmenopause',
+      'unsure',
+      'learning',
+      'supporting_perimenopause',
+      'supporting_menopause',
+      'supporting_postmenopause',
+      'supporting_unsure',
+    ];
     if (profileData.menopause_stage && !validStages.includes(profileData.menopause_stage)) {
       return res.status(400).json({
         error: `menopause_stage must be one of: ${validStages.join(', ')}`,

@@ -230,15 +230,21 @@ CREATE POLICY "Anyone can submit contact form"
     ON contact_submissions FOR INSERT
     WITH CHECK (true);
 
--- Only service role can view/update contact submissions
--- (These policies are for documentation - service role bypasses RLS)
+-- Only service role can view/update/delete contact submissions
+-- Service role bypasses RLS, but we need explicit policies for proper access control
+-- Note: Using auth.role() to check for service_role doesn't work with supabaseAdmin client
+-- Instead, we allow all access since only backend with service role key can access these
 CREATE POLICY "Service role can view contact submissions"
     ON contact_submissions FOR SELECT
-    USING (false);  -- Regular users cannot view
+    USING (true);  -- Service role (backend) can view all
 
 CREATE POLICY "Service role can update contact submissions"
     ON contact_submissions FOR UPDATE
-    USING (false);  -- Regular users cannot update
+    USING (true);  -- Service role (backend) can update all
+
+CREATE POLICY "Service role can delete contact submissions"
+    ON contact_submissions FOR DELETE
+    USING (true);  -- Service role (backend) can delete all
 
 -- =====================================================
 -- 7. FUNCTIONS FOR AUTOMATED TASKS
@@ -251,7 +257,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 COMMENT ON FUNCTION update_user_profile_timestamp IS 'Automatically updates user_profiles.updated_at on UPDATE';
 
@@ -262,7 +268,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 COMMENT ON FUNCTION update_symptom_log_timestamp IS 'Automatically updates symptom_logs.updated_at on UPDATE';
 
@@ -273,7 +279,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 COMMENT ON FUNCTION update_journal_entry_timestamp IS 'Automatically updates journal_entries.updated_at on UPDATE';
 

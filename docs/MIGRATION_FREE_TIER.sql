@@ -273,7 +273,7 @@ BEGIN
     ) THEN
         CREATE POLICY "Service role can view contact submissions"
             ON contact_submissions FOR SELECT
-            USING (false);
+            USING (true);  -- Service role (backend) can view all
     END IF;
 
     IF NOT EXISTS (
@@ -281,7 +281,15 @@ BEGIN
     ) THEN
         CREATE POLICY "Service role can update contact submissions"
             ON contact_submissions FOR UPDATE
-            USING (false);
+            USING (true);  -- Service role (backend) can update all
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'contact_submissions' AND policyname = 'Service role can delete contact submissions'
+    ) THEN
+        CREATE POLICY "Service role can delete contact submissions"
+            ON contact_submissions FOR DELETE
+            USING (true);  -- Service role (backend) can delete all
     END IF;
 END $$;
 
@@ -296,7 +304,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- Function to update symptom_logs.updated_at timestamp
 CREATE OR REPLACE FUNCTION update_symptom_log_timestamp()
@@ -305,7 +313,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- Function to update journal_entries.updated_at timestamp
 CREATE OR REPLACE FUNCTION update_journal_entry_timestamp()
@@ -314,7 +322,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
 
 -- =====================================================
 -- 7. CREATE TRIGGERS

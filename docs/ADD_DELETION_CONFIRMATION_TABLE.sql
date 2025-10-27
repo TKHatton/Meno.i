@@ -42,11 +42,18 @@ CREATE POLICY "Service role can update deletion confirmations"
   FOR UPDATE
   USING (true);
 
+-- Service role can delete (for cleanup and account deletion)
+CREATE POLICY "Service role can delete deletion confirmations"
+  ON public.deletion_confirmations
+  FOR DELETE
+  USING (true);
+
 -- Function to clean up expired confirmation codes (run periodically)
 CREATE OR REPLACE FUNCTION cleanup_expired_deletion_confirmations()
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public, pg_temp
 AS $$
 BEGIN
   DELETE FROM public.deletion_confirmations
