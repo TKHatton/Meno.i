@@ -97,15 +97,9 @@ export default function DeleteAccountModal({ onClose }: DeleteAccountModalProps)
         <div className="p-6 space-y-4">
           {/* Warning Message */}
           <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-sm text-red-900 dark:text-red-100 font-semibold mb-2">
-              ⚠️ Warning: This action is permanent
+            <p className="text-sm text-red-900 dark:text-red-100 font-medium">
+              To permanently close your account, type "DELETE." Once confirmed, this action cannot be reversed.
             </p>
-            <ul className="text-sm text-red-800 dark:text-red-200 space-y-1">
-              <li>• All your journal entries will be deleted</li>
-              <li>• All your symptom logs will be deleted</li>
-              <li>• All your account data will be deleted</li>
-              <li>• This cannot be undone</li>
-            </ul>
           </div>
 
           {/* Confirmation Text */}
