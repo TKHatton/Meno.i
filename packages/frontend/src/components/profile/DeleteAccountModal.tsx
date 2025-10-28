@@ -71,8 +71,8 @@ export default function DeleteAccountModal({ onClose }: DeleteAccountModalProps)
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl max-w-md w-full">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
+      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl max-w-md w-full my-8">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
           <div className="flex items-center gap-3">

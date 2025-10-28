@@ -48,7 +48,7 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
   };
 
   return (
-    <main className="h-screen flex flex-col bg-neutral-50">
+    <main className="h-screen flex flex-col bg-neutral-50 pb-16 md:pb-0">
       {/* Header */}
       <header className="bg-white border-b border-neutral-200 px-6 py-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
