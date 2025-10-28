@@ -26,7 +26,7 @@ export default function DeleteAccountModal({ onClose }: DeleteAccountModalProps)
   const handleDelete = async () => {
     if (!user) return;
 
-    if (confirmationText.toUpperCase() !== 'DELETE') {
+    if (confirmationText.trim().toUpperCase() !== 'DELETE') {
       alert('Please type DELETE to confirm');
       return;
     }
@@ -111,17 +111,30 @@ export default function DeleteAccountModal({ onClose }: DeleteAccountModalProps)
           {/* Confirmation Text */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              To permanently close your account, type <span className="font-bold text-red-600 dark:text-red-400">"DELETE."</span> Once confirmed, this action cannot be reversed.
+              To permanently close your account, type <span className="font-bold text-red-600 dark:text-red-400">"DELETE"</span> (without quotes). Once confirmed, this action cannot be reversed.
             </label>
-            <input
-              type="text"
-              value={confirmationText}
-              onChange={(e) => setConfirmationText(e.target.value)}
-              placeholder="Type DELETE"
-              className="w-full px-4 py-2 border-2 border-neutral-200 dark:border-neutral-700 rounded-lg
-                       bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100
-                       focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={confirmationText}
+                onChange={(e) => setConfirmationText(e.target.value)}
+                placeholder="Type DELETE"
+                className={`w-full px-4 py-2 border-2 rounded-lg
+                         bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100
+                         focus:ring-2 transition-colors ${
+                           confirmationText.trim().toUpperCase() === 'DELETE'
+                             ? 'border-green-500 dark:border-green-600 focus:ring-green-200 dark:focus:ring-green-800'
+                             : 'border-neutral-200 dark:border-neutral-700 focus:border-red-500 focus:ring-red-200 dark:focus:ring-red-800'
+                         }`}
+              />
+              {confirmationText.trim().toUpperCase() === 'DELETE' && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <svg className="w-5 h-5 text-green-600 dark:text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Confirmation Checkbox */}
@@ -149,7 +162,7 @@ export default function DeleteAccountModal({ onClose }: DeleteAccountModalProps)
           </button>
           <button
             onClick={handleDelete}
-            disabled={deleting || confirmationText.toUpperCase() !== 'DELETE' || !understood}
+            disabled={deleting || confirmationText.trim().toUpperCase() !== 'DELETE' || !understood}
             className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {deleting ? 'Deleting...' : 'Delete My Account'}
