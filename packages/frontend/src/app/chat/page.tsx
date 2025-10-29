@@ -44,7 +44,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="h-screen mobile-full-height flex flex-col bg-neutral-50 dark:bg-neutral-900 pb-40 md:pb-0">
+    <div className="h-screen mobile-full-height flex flex-col bg-neutral-50 dark:bg-neutral-900 pb-56 md:pb-0">
       {/* Chat Mode Selector */}
       <div className="hidden md:flex items-center justify-center gap-2 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-4 py-2">
         <span className="text-sm text-neutral-600 dark:text-neutral-400 mr-2">I am a:</span>
