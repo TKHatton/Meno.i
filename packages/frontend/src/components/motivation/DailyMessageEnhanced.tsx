@@ -1,20 +1,16 @@
 /**
- * Daily Message Component (Enhanced)
- * Displays rotating motivational messages with:
+ * Daily Message Component (Simplified)
+ * Displays one rotating motivational message per day with:
  * - Favorites
- * - Category filtering
  * - Social media sharing
  */
 
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { DailyMessage as DailyMessageType, MessageCategory } from '@menoai/shared';
+import type { DailyMessage as DailyMessageType } from '@menoai/shared';
 import {
-  dailyMessages,
-  getCurrentMessageIndex,
-  getMessageByIndex,
-  getTotalMessages,
+  getTodaysMessage,
 } from '@/data/dailyMessages';
 
 interface DailyMessageEnhancedProps {
@@ -22,10 +18,8 @@ interface DailyMessageEnhancedProps {
 }
 
 export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhancedProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState<DailyMessageType | null>(null);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
-  const [selectedCategory, setSelectedCategory] = useState<MessageCategory | 'all'>('all');
   const [showShareMenu, setShowShareMenu] = useState(false);
 
   // Load favorites from localStorage
@@ -36,52 +30,11 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
     }
   }, []);
 
-  // Initialize with today's message
+  // Get today's message
   useEffect(() => {
-    const todayIndex = getCurrentMessageIndex(userJoinDate);
-    setCurrentIndex(todayIndex);
-    setMessage(getMessageByIndex(todayIndex));
+    const todaysMessage = getTodaysMessage(userJoinDate);
+    setMessage(todaysMessage);
   }, [userJoinDate]);
-
-  const handlePrevious = () => {
-    let newIndex = currentIndex - 1;
-
-    // Skip if filtering by category
-    if (selectedCategory !== 'all') {
-      while (true) {
-        const msg = getMessageByIndex(newIndex);
-        if (msg.category === selectedCategory) break;
-        newIndex--;
-        // Prevent infinite loop
-        if (Math.abs(newIndex - currentIndex) > dailyMessages.length) {
-          return; // No messages in this category
-        }
-      }
-    }
-
-    setCurrentIndex(newIndex);
-    setMessage(getMessageByIndex(newIndex));
-  };
-
-  const handleNext = () => {
-    let newIndex = currentIndex + 1;
-
-    // Skip if filtering by category
-    if (selectedCategory !== 'all') {
-      while (true) {
-        const msg = getMessageByIndex(newIndex);
-        if (msg.category === selectedCategory) break;
-        newIndex++;
-        // Prevent infinite loop
-        if (Math.abs(newIndex - currentIndex) > dailyMessages.length) {
-          return; // No messages in this category
-        }
-      }
-    }
-
-    setCurrentIndex(newIndex);
-    setMessage(getMessageByIndex(newIndex));
-  };
 
   const toggleFavorite = () => {
     if (!message) return;
@@ -95,24 +48,6 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
 
     setFavorites(newFavorites);
     localStorage.setItem('favoriteMessages', JSON.stringify(Array.from(newFavorites)));
-  };
-
-  const handleCategoryFilter = (category: MessageCategory | 'all') => {
-    setSelectedCategory(category);
-
-    if (category === 'all') {
-      // Reset to today's message
-      const todayIndex = getCurrentMessageIndex(userJoinDate);
-      setCurrentIndex(todayIndex);
-      setMessage(getMessageByIndex(todayIndex));
-    } else {
-      // Find first message in category
-      const firstIndex = dailyMessages.findIndex(msg => msg.category === category);
-      if (firstIndex !== -1) {
-        setCurrentIndex(firstIndex);
-        setMessage(dailyMessages[firstIndex]);
-      }
-    }
   };
 
   const shareToSocial = (platform: 'twitter' | 'facebook' | 'instagram' | 'email' | 'sms' | 'copy') => {
@@ -198,66 +133,10 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
     return null;
   }
 
-  const totalMessages = getTotalMessages();
-  const displayIndex = ((currentIndex % totalMessages) + totalMessages) % totalMessages;
   const isFavorite = favorites.has(message.id);
 
   return (
     <div className="space-y-4">
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => handleCategoryFilter('all')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            selectedCategory === 'all'
-              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
-              : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-          }`}
-        >
-          All
-        </button>
-        <button
-          onClick={() => handleCategoryFilter('affirmation')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            selectedCategory === 'affirmation'
-              ? 'bg-purple-600 text-white'
-              : 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50'
-          }`}
-        >
-          💜 Affirmations
-        </button>
-        <button
-          onClick={() => handleCategoryFilter('education')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            selectedCategory === 'education'
-              ? 'bg-blue-600 text-white'
-              : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50'
-          }`}
-        >
-          📚 Education
-        </button>
-        <button
-          onClick={() => handleCategoryFilter('tip')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            selectedCategory === 'tip'
-              ? 'bg-green-600 text-white'
-              : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50'
-          }`}
-        >
-          💡 Tips
-        </button>
-        <button
-          onClick={() => handleCategoryFilter('encouragement')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            selectedCategory === 'encouragement'
-              ? 'bg-amber-600 text-white'
-              : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/50'
-          }`}
-        >
-          🌟 Encouragement
-        </button>
-      </div>
-
       {/* Message Card */}
       <div className={`rounded-xl border-2 p-6 shadow-md transition-all ${getCategoryColor(message.category)}`}>
         {/* Header */}
@@ -274,9 +153,6 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="text-xs text-neutral-500 dark:text-neutral-400">
-              {displayIndex + 1} of {totalMessages}
-            </div>
             {/* Favorite Button */}
             <button
               onClick={toggleFavorite}
@@ -368,37 +244,10 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
         </div>
 
         {/* Message Content */}
-        <div className="mb-6">
+        <div>
           <p className="text-lg leading-relaxed text-neutral-800 dark:text-neutral-200">
             "{message.text}"
           </p>
-        </div>
-
-        {/* Navigation */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={handlePrevious}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300
-                     bg-white dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700
-                     rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Previous
-          </button>
-
-          <button
-            onClick={handleNext}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300
-                     bg-white dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700
-                     rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
-          >
-            Next
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
       </div>
 
