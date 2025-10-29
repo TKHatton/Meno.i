@@ -174,7 +174,7 @@ export default function PrivacyPage() {
             <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
               <p className="text-neutral-800 font-medium">To exercise your rights, contact us at:</p>
               <p className="text-neutral-700 mt-2">
-                Email: <a href="mailto:privacy@menoai.example.com" className="text-primary-600 hover:underline">privacy@menoai.example.com</a>
+                Email: <a href="mailto:hello@cheilagibbs.com" className="text-primary-600 hover:underline">hello@cheilagibbs.com</a>
               </p>
               <p className="text-neutral-700 text-sm mt-2">We will respond within 30 days.</p>
             </div>
@@ -231,7 +231,7 @@ export default function PrivacyPage() {
               MenoAI is designed for adults experiencing perimenopause and menopause. Our service is not
               intended for individuals under 18 years of age. We do not knowingly collect personal information
               from children. If you believe a child has provided us with personal data, please contact us
-              immediately at privacy@menoai.example.com.
+              immediately at hello@cheilagibbs.com.
             </p>
           </section>
 
@@ -273,8 +273,8 @@ export default function PrivacyPage() {
             </p>
 
             <div className="bg-neutral-100 p-6 rounded-lg space-y-2">
-              <p className="text-neutral-800"><strong>Email</strong>: privacy@menoai.example.com</p>
-              <p className="text-neutral-800"><strong>Data Protection Officer</strong>: dpo@menoai.example.com</p>
+              <p className="text-neutral-800"><strong>Email</strong>: hello@cheilagibbs.com</p>
+              <p className="text-neutral-800"><strong>Data Protection Officer</strong>: hello@cheilagibbs.com</p>
               <p className="text-neutral-800"><strong>Response Time</strong>: Within 30 days</p>
             </div>
 

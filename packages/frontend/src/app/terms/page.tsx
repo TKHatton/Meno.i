@@ -339,7 +339,7 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-neutral-700 mt-3">
               <li>Requesting account deletion through your profile settings</li>
-              <li>Contacting us at support@menoai.example.com</li>
+              <li>Contacting us at hello@cheilagibbs.com</li>
               <li>Upon deletion, your data will be permanently removed (see Privacy Policy for details)</li>
             </ul>
 
@@ -396,7 +396,7 @@ export default function TermsPage() {
 
             <h3 className="text-xl font-medium text-neutral-800 mb-3 mt-6">12.2 Dispute Resolution</h3>
             <p className="text-neutral-700 leading-relaxed mb-4">
-              If you have a dispute with us, please first contact us at legal@menoai.example.com to attempt
+              If you have a dispute with us, please first contact us at hello@cheilagibbs.com to attempt
               to resolve it informally.
             </p>
             <p className="text-neutral-700 leading-relaxed">
@@ -454,8 +454,8 @@ export default function TermsPage() {
             </p>
 
             <div className="bg-neutral-100 p-6 rounded-lg space-y-2">
-              <p className="text-neutral-800"><strong>Email</strong>: legal@menoai.example.com</p>
-              <p className="text-neutral-800"><strong>Support</strong>: support@menoai.example.com</p>
+              <p className="text-neutral-800"><strong>Email</strong>: hello@cheilagibbs.com</p>
+              <p className="text-neutral-800"><strong>Support</strong>: hello@cheilagibbs.com</p>
               <p className="text-neutral-800"><strong>Response Time</strong>: Within 3-5 business days</p>
             </div>
           </section>
