@@ -49,9 +49,9 @@ export default function DashboardPage() {
 
   const fetchUserProfile = async () => {
     try {
-      const profile = await getUserProfile(user!.id);
-      if (profile.display_name) {
-        setDisplayName(profile.display_name);
+      const response = await getUserProfile(user!.id);
+      if (response.profile?.display_name) {
+        setDisplayName(response.profile.display_name);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
