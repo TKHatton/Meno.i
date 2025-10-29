@@ -276,7 +276,7 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
       </div>
 
       {/* Input Area */}
-      <div className="md:border-t border-neutral-200 bg-white dark:bg-neutral-800 px-4 md:px-6 py-3 md:py-4 safe-area-bottom shadow-lg md:shadow-none">
+      <div className="md:border-t border-neutral-200 bg-white dark:bg-neutral-800 px-4 md:px-6 py-4 pb-6 md:py-4 md:pb-4 safe-area-bottom shadow-lg md:shadow-none">
         <div className="flex items-center gap-3 mb-3">
           <label className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer">
             <input
