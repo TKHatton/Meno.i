@@ -11,6 +11,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { useUserMode } from '@/hooks/useUserMode';
 import { getColorScheme } from '@/utils/colorScheme';
 import DailyMessageEnhanced from '@/components/motivation/DailyMessageEnhanced';
+import { getUserProfile } from '@/lib/api';
 import Link from 'next/link';
 
 interface Insight {
@@ -29,6 +30,7 @@ export default function DashboardPage() {
   const colorScheme = getColorScheme(userMode);
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loadingInsights, setLoadingInsights] = useState(true);
+  const [displayName, setDisplayName] = useState<string>('');
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -37,12 +39,24 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
-  // Fetch insights
+  // Fetch user profile and insights
   useEffect(() => {
     if (user) {
+      fetchUserProfile();
       fetchInsights();
     }
   }, [user]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const profile = await getUserProfile(user!.id);
+      if (profile.display_name) {
+        setDisplayName(profile.display_name);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   const fetchInsights = async () => {
     try {
@@ -89,7 +103,7 @@ export default function DashboardPage() {
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
-            Welcome back! ☀️
+            Welcome back{displayName ? `, ${displayName}` : ''}! ☀️
           </h1>
           <p className="text-neutral-600 dark:text-neutral-400">
             {dayName}, {monthDay}

@@ -164,3 +164,16 @@ export async function deleteConversation(conversationId: string, userId: string)
 
   return response.json();
 }
+
+/**
+ * Get user profile data
+ */
+export async function getUserProfile(userId: string) {
+  const response = await fetch(`${API_URL}/api/profile/${userId}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to get user profile: ${response.statusText}`);
+  }
+
+  return response.json();
+}
