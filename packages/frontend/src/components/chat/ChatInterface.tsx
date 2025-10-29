@@ -269,7 +269,7 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
       )}
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-8">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-8 pb-72 md:pb-8">
         <MessageList messages={messages} />
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
