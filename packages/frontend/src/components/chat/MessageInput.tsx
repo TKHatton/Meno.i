@@ -35,7 +35,7 @@ export default function MessageInput({ onSend, disabled = false }: MessageInputP
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyPress}
-        placeholder="Share what's on your mind..."
+        placeholder="Type a message..."
         disabled={disabled}
         rows={1}
         className="flex-1 resize-none rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-3
