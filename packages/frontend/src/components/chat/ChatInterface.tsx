@@ -269,14 +269,14 @@ export default function ChatInterface({ onSafetyTrigger, chatMode }: ChatInterfa
       )}
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-8 pb-72 md:pb-8">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-8">
         <MessageList messages={messages} />
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
-      <div className="md:border-t border-neutral-200 bg-white dark:bg-neutral-800 px-4 md:px-6 py-4 pb-6 md:py-4 md:pb-4 safe-area-bottom shadow-lg md:shadow-none">
+      <div className="md:border-t border-neutral-200 bg-white dark:bg-neutral-800 px-4 md:px-6 py-4 mb-20 md:mb-0 md:py-4 safe-area-bottom shadow-lg md:shadow-none">
         <div className="flex items-center gap-3 mb-3">
           <label className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer">
             <input
