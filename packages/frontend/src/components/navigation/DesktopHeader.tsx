@@ -56,36 +56,36 @@ export default function DesktopHeader() {
   }
 
   return (
-    <header className="hidden md:block sticky top-0 z-40 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="hidden md:block sticky top-0 z-40 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 shadow-elegant">
+      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/dashboard" className="flex items-center">
+        <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo.png"
             alt="Meno.i Logo"
-            width={56}
-            height={56}
-            className="rounded-lg"
+            width={48}
+            height={48}
+            className="object-contain"
           />
         </Link>
 
         {/* Center Navigation */}
-        <nav className="flex items-center gap-8">
+        <nav className="flex items-center gap-10">
           {navLinks.map((link) => {
             const active = isActive(link.path);
             return (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`text-sm font-medium transition-colors relative ${
+                className={`text-sm font-medium tracking-wide transition-all relative pb-1 ${
                   active
                     ? 'text-primary-600 dark:text-primary-400'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-500 dark:hover:text-primary-300'
                 }`}
               >
                 {link.name}
                 {active && (
-                  <div className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary-600 dark:bg-primary-400"></div>
+                  <div className="absolute -bottom-5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full"></div>
                 )}
               </Link>
             );
@@ -93,9 +93,9 @@ export default function DesktopHeader() {
         </nav>
 
         {/* Profile Section */}
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+        <div className="flex items-center gap-4">
+          <div className="text-right hidden lg:block">
+            <p className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
               {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -104,7 +104,7 @@ export default function DesktopHeader() {
           </div>
           <Link
             href="/profile"
-            className="w-10 h-10 rounded-full overflow-hidden hover:ring-2 hover:ring-primary-500 transition-all"
+            className="w-11 h-11 rounded-full overflow-hidden hover:ring-2 hover:ring-primary-400 hover:ring-offset-2 transition-all shadow-soft"
           >
             {customAvatarUrl || user?.user_metadata?.avatar_url || user?.user_metadata?.picture ? (
               <img
@@ -113,7 +113,7 @@ export default function DesktopHeader() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-semibold">
+              <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
                 {(user?.user_metadata?.name || user?.email || 'U').charAt(0).toUpperCase()}
               </div>
             )}

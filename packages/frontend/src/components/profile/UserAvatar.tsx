@@ -47,12 +47,12 @@ export default function UserAvatar({
         <img
           src={avatarUrl}
           alt={name || email || 'User'}
-          className="h-full w-full rounded-full object-cover ring-2 ring-white"
+          className="h-full w-full rounded-full object-cover ring-2 ring-white dark:ring-neutral-700 shadow-soft"
           referrerPolicy="no-referrer"
         />
       ) : (
         <div className="h-full w-full rounded-full bg-gradient-to-br from-primary-400 to-primary-600
-                      flex items-center justify-center text-white font-semibold ring-2 ring-white">
+                      flex items-center justify-center text-white font-semibold ring-2 ring-white dark:ring-neutral-700 shadow-soft">
           {getInitials()}
         </div>
       )}

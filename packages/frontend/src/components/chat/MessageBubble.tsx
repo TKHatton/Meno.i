@@ -50,15 +50,15 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
   };
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} fade-in`}>
       <div className={`max-w-[80%] ${isUser ? 'order-2' : 'order-1'}`}>
         {/* Message bubble */}
         <div className="relative">
           <div
-            className={`rounded-2xl px-5 py-3 ${
+            className={`rounded-2xl px-6 py-4 shadow-soft ${
               isUser
-                ? 'bg-primary-600 text-white'
-                : 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-700'
+                ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white'
+                : 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 border border-secondary-100 dark:border-neutral-700'
             }`}
           >
             <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{content}</p>
@@ -68,11 +68,11 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
           {isMounted && !isUser && textToSpeech.supported && (
             <button
               onClick={handlePlayVoice}
-              className={`mt-2 p-2 rounded-lg border-2 shadow-sm
-                       transition-all
+              className={`mt-3 p-2.5 rounded-xl shadow-soft
+                       transition-all hover:scale-105
                        ${isSpeaking
-                         ? 'bg-primary-600 text-white border-primary-600 shadow-lg'
-                         : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 hover:border-primary-600'
+                         ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-soft-lg'
+                         : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border border-secondary-100 dark:border-neutral-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 hover:border-primary-400'
                        }`}
               aria-label={isSpeaking ? 'Stop speaking' : 'Read message aloud'}
               title={isSpeaking ? 'Stop speaking' : 'Read message aloud'}
@@ -92,7 +92,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
 
         {/* Timestamp */}
         {formattedTime && (
-          <p className={`text-xs text-neutral-500 mt-1 px-2 ${isUser ? 'text-right' : 'text-left'}`}>
+          <p className={`text-xs text-neutral-500 dark:text-neutral-400 mt-2 px-3 ${isUser ? 'text-right' : 'text-left'}`}>
             {formattedTime}
           </p>
         )}

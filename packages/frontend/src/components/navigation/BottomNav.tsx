@@ -58,27 +58,24 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 md:hidden">
-      <div className="flex items-center justify-around h-16">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-md border-t border-secondary-100 dark:border-neutral-700 shadow-elegant md:hidden safe-area-bottom">
+      <div className="flex items-center justify-around h-20 px-2">
         {navItems.map((item) => {
           const active = isActive(item.path);
           return (
             <Link
               key={item.path}
               href={item.path}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all ${
                 active
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                  ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-soft'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:bg-secondary-100 dark:hover:bg-neutral-700'
               }`}
             >
-              <div className="relative">
+              <div className={`transition-transform ${active ? 'scale-110' : ''}`}>
                 {item.icon}
-                {active && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 dark:bg-primary-400 rounded-full"></div>
-                )}
               </div>
-              <span className={`text-xs mt-1 font-medium ${active ? 'text-primary-600 dark:text-primary-400' : ''}`}>
+              <span className={`text-[10px] font-medium tracking-wide ${active ? 'text-white' : ''}`}>
                 {item.name}
               </span>
             </Link>

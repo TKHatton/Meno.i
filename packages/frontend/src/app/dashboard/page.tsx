@@ -98,14 +98,14 @@ export default function DashboardPage() {
   const userJoinDate = user.created_at ? new Date(user.created_at) : new Date();
 
   return (
-    <main className={`min-h-screen ${colorScheme.backgroundGradient}`}>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <main className="min-h-screen bg-gradient-to-br from-secondary-100 via-neutral-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+      <div className="container mx-auto px-6 py-10 max-w-5xl pb-24 md:pb-10">
         {/* Welcome Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
-            Welcome back{displayName ? `, ${displayName}` : ''}! ☀️
+        <div className="mb-10">
+          <h1 className="text-4xl font-serif text-neutral-900 dark:text-neutral-100 mb-3">
+            Welcome back{displayName ? `, ${displayName}` : ''}
           </h1>
-          <p className="text-neutral-600 dark:text-neutral-400">
+          <p className="text-lg text-neutral-600 dark:text-neutral-400 font-light">
             {dayName}, {monthDay}
           </p>
         </div>
@@ -116,12 +116,12 @@ export default function DashboardPage() {
 
           {/* AI Insights Section */}
           {!loadingInsights && insights.length > 0 && (
-            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-                  ✨ Your Insights
+            <div className="card-elegant p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100">
+                  Your Insights
                 </h2>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                <span className="text-sm text-neutral-500 dark:text-neutral-400 px-3 py-1 bg-secondary-100 dark:bg-neutral-700 rounded-pill">
                   AI-powered
                 </span>
               </div>
@@ -187,8 +187,8 @@ export default function DashboardPage() {
           )}
 
           {/* Quick Actions */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <div className="card-elegant p-8">
+            <h2 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
               Quick Actions
             </h2>
 
@@ -196,23 +196,17 @@ export default function DashboardPage() {
               {/* Log Symptoms */}
               <Link
                 href="/track"
-                className={`flex items-center gap-4 p-4 border-2 border-neutral-200 dark:border-neutral-700
-                         rounded-lg transition-all group
-                         ${userMode === 'man'
-                           ? 'hover:border-primary-600 dark:hover:border-primary-600 hover:bg-primary-100 dark:hover:bg-primary-900/30'
-                           : 'hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20'}`}
+                className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
               >
-                <div className={`flex-shrink-0 w-12 h-12 rounded-full
-                              flex items-center justify-center transition-colors
-                              ${userMode === 'man'
-                                ? 'bg-primary-100 dark:bg-primary-900/30 group-hover:bg-primary-200 dark:group-hover:bg-primary-900/50'
-                                : 'bg-primary-100 dark:bg-primary-900/30 group-hover:bg-primary-200 dark:group-hover:bg-primary-900/50'}`}>
-                  <svg className={`w-6 h-6 ${userMode === 'man' ? 'text-primary-700 dark:text-primary-400' : 'text-primary-600 dark:text-primary-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl
+                              flex items-center justify-center shadow-soft">
+                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-lg">
                     Log Today's Symptoms
                   </h3>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -224,20 +218,17 @@ export default function DashboardPage() {
               {/* Write Journal Entry */}
               <Link
                 href="/journal"
-                className={`flex items-center gap-4 p-4 border-2 border-neutral-200 dark:border-neutral-700
-                         rounded-lg transition-all group
-                         ${userMode === 'man'
-                           ? 'hover:border-primary-600 dark:hover:border-primary-600 hover:bg-primary-100 dark:hover:bg-primary-900/30'
-                           : 'hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20'}`}
+                className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full
-                              flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
-                  <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl
+                              flex items-center justify-center shadow-soft">
+                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-lg">
                     Write Journal Entry
                   </h3>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
