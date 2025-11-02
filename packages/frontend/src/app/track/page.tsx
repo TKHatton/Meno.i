@@ -62,42 +62,43 @@ export default function TrackPage() {
   return (
     <main className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Header */}
-      <header className="bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 px-6 py-6 shadow-elegant">
+      <header className="bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 px-4 sm:px-6 py-6 shadow-elegant">
         <div className="container mx-auto max-w-5xl flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-serif text-neutral-900 dark:text-neutral-100">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl font-serif text-neutral-900 dark:text-neutral-100 truncate">
               Symptom Tracker
             </h1>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-light">
-              Track your daily symptoms and spot patterns
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-light">
+              Track symptoms and patterns
             </p>
           </div>
           <button
             onClick={() => router.push('/dashboard')}
-            className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 font-medium"
+            className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 font-medium ml-4 whitespace-nowrap"
           >
-            ← Dashboard
+            ← Back
           </button>
         </div>
       </header>
 
       {/* Tab Navigation */}
       <div className="bg-white dark:bg-neutral-800 border-b border-secondary-100 dark:border-neutral-700">
-        <div className="container mx-auto max-w-5xl px-6">
-          <div className="flex gap-6">
+        <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="flex gap-2 sm:gap-6">
             <button
               onClick={() => setActiveView('checkin')}
-              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
+              className={`flex-1 sm:flex-none px-2 sm:px-4 py-3 sm:py-4 text-sm sm:text-base font-medium border-b-2 transition-colors whitespace-nowrap ${
                 activeView === 'checkin'
                   ? 'border-primary-400 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
               }`}
             >
-              Today's Check-In
+              <span className="hidden sm:inline">Today's Check-In</span>
+              <span className="sm:hidden">Check-In</span>
             </button>
             <button
               onClick={() => setActiveView('history')}
-              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
+              className={`flex-1 sm:flex-none px-2 sm:px-4 py-3 sm:py-4 text-sm sm:text-base font-medium border-b-2 transition-colors ${
                 activeView === 'history'
                   ? 'border-primary-400 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
@@ -107,7 +108,7 @@ export default function TrackPage() {
             </button>
             <button
               onClick={() => setActiveView('stats')}
-              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
+              className={`flex-1 sm:flex-none px-2 sm:px-4 py-3 sm:py-4 text-sm sm:text-base font-medium border-b-2 transition-colors ${
                 activeView === 'stats'
                   ? 'border-primary-400 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
@@ -120,7 +121,7 @@ export default function TrackPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto max-w-5xl px-6 py-10 pb-24 md:pb-10">
+      <div className="container mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-10 pb-24 md:pb-10">
         {activeView === 'checkin' && (
           <DailyCheckIn userId={user.id} onSaved={handleCheckInSaved} />
         )}

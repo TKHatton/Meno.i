@@ -61,9 +61,9 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-8">
+      <div className="card-elegant p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-400 mx-auto"></div>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">Loading stats...</p>
         </div>
       </div>
@@ -91,9 +91,9 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
   return (
     <div className="space-y-6">
       {/* Period Selector */}
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <div className="card-elegant p-6 sm:p-10">
+        <div className="flex items-center justify-between mb-8 gap-4">
+          <h3 className="text-2xl sm:text-3xl font-serif text-neutral-900 dark:text-neutral-100">
             Your Tracking Stats
           </h3>
           <div className="flex gap-2 bg-neutral-100 dark:bg-neutral-700 rounded-lg p-1">
@@ -101,7 +101,7 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
               onClick={() => setPeriod('week')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                 period === 'week'
-                  ? 'bg-primary-600 text-white shadow-sm'
+                  ? 'bg-primary-400 text-white shadow-sm'
                   : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
@@ -111,7 +111,7 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
               onClick={() => setPeriod('month')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                 period === 'month'
-                  ? 'bg-primary-600 text-white shadow-sm'
+                  ? 'bg-primary-400 text-white shadow-sm'
                   : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
@@ -140,7 +140,7 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
               </div>
               <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-3">
                 <div
-                  className="bg-gradient-to-r from-primary-600 to-primary-500 h-3 rounded-full transition-all duration-500"
+                  className="bg-primary-400 h-3 rounded-full transition-all duration-500"
                   style={{ width: `${percentageLogged}%` }}
                 />
               </div>
@@ -153,11 +153,11 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Most Common Symptom */}
               {stats.most_frequent_symptoms.length > 0 && (
-                <div className="p-4 bg-neutral-50 dark:bg-neutral-700/30 rounded-lg">
-                  <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
+                <div className="p-6 bg-secondary-50 dark:bg-neutral-700/30 rounded-2xl border border-secondary-100 dark:border-neutral-700">
+                  <div className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
                     Most Common
                   </div>
-                  <div className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 capitalize">
+                  <div className="text-xl font-serif text-neutral-900 dark:text-neutral-100 capitalize mb-1">
                     🔥 {stats.most_frequent_symptoms[0].symptom.replace(/_/g, ' ')}
                   </div>
                   <div className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -168,11 +168,11 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
               )}
 
               {/* Average Energy */}
-              <div className="p-4 bg-neutral-50 dark:bg-neutral-700/30 rounded-lg">
-                <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
+              <div className="p-6 bg-secondary-50 dark:bg-neutral-700/30 rounded-2xl border border-secondary-100 dark:border-neutral-700">
+                <div className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
                   Avg Energy Level
                 </div>
-                <div className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                <div className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-1">
                   😊 {stats.avg_energy_level > 0 ? stats.avg_energy_level.toFixed(1) : 'N/A'}/5
                 </div>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -190,14 +190,14 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
             {/* Top Symptoms List */}
             {stats.most_frequent_symptoms.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                <h4 className="text-lg font-serif text-neutral-900 dark:text-neutral-100 mb-4">
                   Top Symptoms This {period === 'week' ? 'Week' : 'Month'}
                 </h4>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {stats.most_frequent_symptoms.slice(0, 5).map((symptom, index) => (
                     <div
                       key={symptom.symptom}
-                      className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-700/30 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-secondary-50 dark:bg-neutral-700/30 rounded-xl border border-secondary-100 dark:border-neutral-700"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-neutral-500 dark:text-neutral-400 text-sm">
@@ -222,8 +222,8 @@ export default function SymptomStats({ userId, refreshTrigger }: SymptomStatsPro
             )}
 
             {/* Encouragement Message */}
-            <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
-              <p className="text-sm text-primary-900 dark:text-primary-100">
+            <div className="p-6 bg-secondary-100 dark:bg-neutral-700/50 rounded-2xl border-2 border-primary-200 dark:border-primary-800">
+              <p className="text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed">
                 💡 {getEncouragementMessage()}
               </p>
             </div>

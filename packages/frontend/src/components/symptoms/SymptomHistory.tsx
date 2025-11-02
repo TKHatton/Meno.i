@@ -79,9 +79,9 @@ export default function SymptomHistory({ userId, refreshTrigger }: SymptomHistor
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-8">
+      <div className="card-elegant p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-400 mx-auto"></div>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">Loading history...</p>
         </div>
       </div>
@@ -92,8 +92,8 @@ export default function SymptomHistory({ userId, refreshTrigger }: SymptomHistor
     <div className="space-y-6">
       {/* Most Frequent Symptoms Card */}
       {mostFrequent.length > 0 && (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+        <div className="card-elegant p-8">
+          <h3 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
             Most Frequent Symptoms (Last {days} Days)
           </h3>
           <div className="space-y-3">
@@ -117,16 +117,17 @@ export default function SymptomHistory({ userId, refreshTrigger }: SymptomHistor
       )}
 
       {/* Days Filter */}
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <div className="card-elegant p-6 sm:p-8">
+        <div className="flex items-center justify-between mb-6 gap-4">
+          <h3 className="text-xl sm:text-2xl font-serif text-neutral-900 dark:text-neutral-100">
             Your Symptom Logs
           </h3>
           <select
             value={days}
             onChange={(e) => setDays(Number(e.target.value))}
-            className="px-3 py-2 border-2 border-neutral-200 dark:border-neutral-700 rounded-lg
-                     bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+            className="px-3 py-2 text-sm border-2 border-secondary-100 dark:border-neutral-700 rounded-xl
+                     bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100
+                     focus:border-primary-400 focus:ring-2 focus:ring-primary-400/20 transition-all"
           >
             <option value={7}>Last 7 days</option>
             <option value={14}>Last 14 days</option>
@@ -178,10 +179,10 @@ function LogCard({ log }: LogCardProps) {
   const symptomCount = Object.keys(log.symptoms).length;
 
   return (
-    <div className="border-2 border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+    <div className="border border-secondary-100 dark:border-neutral-700 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 shadow-soft hover:shadow-soft-lg transition-all">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
+        className="w-full px-4 sm:px-6 py-4 flex items-center justify-between hover:bg-secondary-50 dark:hover:bg-neutral-700/50 transition-colors"
       >
         <div className="flex items-center gap-4">
           <div className="text-left">
@@ -214,13 +215,13 @@ function LogCard({ log }: LogCardProps) {
                 <span className="text-sm text-neutral-900 dark:text-neutral-100 capitalize">
                   {symptom.replace(/_/g, ' ')}
                 </span>
-                <div className="flex gap-1">
+                <div className="flex gap-0.5 sm:gap-1">
                   {[1, 2, 3, 4, 5].map((level) => (
                     <div
                       key={level}
-                      className={`w-6 h-6 rounded-full ${
+                      className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full ${
                         level <= severity
-                          ? 'bg-primary-500'
+                          ? 'bg-primary-400'
                           : 'bg-neutral-200 dark:bg-neutral-700'
                       }`}
                     />

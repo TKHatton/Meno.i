@@ -139,9 +139,9 @@ export default function DailyCheckIn({ userId, onSaved }: DailyCheckInProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-8">
+      <div className="card-elegant p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-400 mx-auto"></div>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">Loading...</p>
         </div>
       </div>
@@ -149,18 +149,18 @@ export default function DailyCheckIn({ userId, onSaved }: DailyCheckInProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6 md:p-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+    <div className="card-elegant p-6 md:p-10">
+      <div className="mb-8">
+        <h2 className="text-3xl font-serif text-neutral-900 dark:text-neutral-100 mb-2">
           Today's Check-In
         </h2>
-        <p className="text-neutral-600 dark:text-neutral-400">{today}</p>
+        <p className="text-neutral-600 dark:text-neutral-400 font-light">{today}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Physical Symptoms */}
         <div>
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
             Physical Symptoms
           </h3>
           <div className="space-y-4">
@@ -180,8 +180,8 @@ export default function DailyCheckIn({ userId, onSaved }: DailyCheckInProps) {
 
         {/* Emotional/Cognitive Symptoms */}
         <div>
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            Emotional/Cognitive
+          <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
+            Emotional & Cognitive
           </h3>
           <div className="space-y-4">
             {EMOTIONAL_SYMPTOMS.map((symptom) => (
@@ -203,16 +203,16 @@ export default function DailyCheckIn({ userId, onSaved }: DailyCheckInProps) {
           <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
             Overall Energy Level Today
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             {[1, 2, 3, 4, 5].map((level) => (
               <button
                 key={level}
                 type="button"
                 onClick={() => setEnergyLevel(level)}
-                className={`flex-1 h-12 rounded-lg border-2 font-medium transition-all ${
+                className={`flex-1 h-12 rounded-xl border-2 font-medium transition-all ${
                   energyLevel === level
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                    : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
+                    ? 'border-primary-400 bg-primary-400 text-white'
+                    : 'border-neutral-200 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-neutral-600'
                 }`}
               >
                 {level}
@@ -258,11 +258,9 @@ export default function DailyCheckIn({ userId, onSaved }: DailyCheckInProps) {
         <button
           type="submit"
           disabled={isSubmitting || (Object.keys(symptoms).length === 0 && !energyLevel)}
-          className="w-full px-6 py-4 bg-gradient-to-r from-primary-600 to-primary-500
-                   text-white font-semibold rounded-lg
-                   hover:from-primary-700 hover:to-primary-600
-                   focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                   transition-all duration-200 shadow-md hover:shadow-lg
+          className="w-full px-6 py-4 bg-primary-400 text-white font-semibold rounded-pill
+                   hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400
+                   transition-all shadow-soft hover:shadow-soft-lg
                    disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Saving...' : 'Save Check-In'}
@@ -316,15 +314,15 @@ function SymptomRow({
         </label>
 
         {checked && (
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             {[1, 2, 3, 4, 5].map((level) => (
               <button
                 key={level}
                 type="button"
                 onClick={() => onSeverityChange(symptomKey, level)}
-                className={`w-10 h-10 rounded-full border-2 font-medium transition-all ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 font-medium text-sm transition-all ${
                   severity === level
-                    ? 'border-primary-500 bg-primary-500 text-white scale-110'
+                    ? 'border-primary-400 bg-primary-400 text-white scale-110'
                     : 'border-neutral-300 dark:border-neutral-600 hover:border-primary-300 dark:hover:border-primary-700'
                 }`}
               >
