@@ -85,7 +85,7 @@ export default function DesktopHeader() {
               >
                 {link.name}
                 {active && (
-                  <div className="absolute -bottom-5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full"></div>
+                  <div className="absolute -bottom-5 left-0 right-0 h-0.5 bg-primary-400 rounded-full"></div>
                 )}
               </Link>
             );
@@ -113,7 +113,7 @@ export default function DesktopHeader() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-full h-full bg-primary-400 flex items-center justify-center text-white font-semibold text-sm">
                 {(user?.user_metadata?.name || user?.email || 'U').charAt(0).toUpperCase()}
               </div>
             )}

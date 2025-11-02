@@ -60,57 +60,57 @@ export default function TrackPage() {
   }
 
   return (
-    <main className={`min-h-screen ${colorScheme.backgroundGradient}`}>
+    <main className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Header */}
-      <header className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-4 py-4">
-        <div className="container mx-auto max-w-4xl flex items-center justify-between">
+      <header className="bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 px-6 py-6 shadow-elegant">
+        <div className="container mx-auto max-w-5xl flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+            <h1 className="text-3xl font-serif text-neutral-900 dark:text-neutral-100">
               Symptom Tracker
             </h1>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-light">
               Track your daily symptoms and spot patterns
             </p>
           </div>
           <button
             onClick={() => router.push('/dashboard')}
-            className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+            className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 font-medium"
           >
-            ← Back to Dashboard
+            ← Dashboard
           </button>
         </div>
       </header>
 
       {/* Tab Navigation */}
-      <div className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
-        <div className="container mx-auto max-w-4xl px-4">
-          <div className="flex gap-4">
+      <div className="bg-white dark:bg-neutral-800 border-b border-secondary-100 dark:border-neutral-700">
+        <div className="container mx-auto max-w-5xl px-6">
+          <div className="flex gap-6">
             <button
               onClick={() => setActiveView('checkin')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
                 activeView === 'checkin'
-                  ? `${userMode === 'man' ? 'border-primary-700 text-primary-700' : 'border-primary-600 text-primary-600'}`
-                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                  ? 'border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
               }`}
             >
               Today's Check-In
             </button>
             <button
               onClick={() => setActiveView('history')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
                 activeView === 'history'
-                  ? `${userMode === 'man' ? 'border-primary-700 text-primary-700' : 'border-primary-600 text-primary-600'}`
-                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                  ? 'border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
               }`}
             >
               History
             </button>
             <button
               onClick={() => setActiveView('stats')}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              className={`px-4 py-4 font-medium border-b-2 transition-colors ${
                 activeView === 'stats'
-                  ? `${userMode === 'man' ? 'border-primary-700 text-primary-700' : 'border-primary-600 text-primary-600'}`
-                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                  ? 'border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400'
               }`}
             >
               Stats
@@ -120,7 +120,7 @@ export default function TrackPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-5xl px-6 py-10 pb-24 md:pb-10">
         {activeView === 'checkin' && (
           <DailyCheckIn userId={user.id} onSaved={handleCheckInSaved} />
         )}

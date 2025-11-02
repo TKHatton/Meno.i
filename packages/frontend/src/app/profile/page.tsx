@@ -184,21 +184,21 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-neutral-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 pb-20 md:pb-8">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <main className="min-h-screen bg-neutral-50 dark:bg-neutral-900 pb-24 md:pb-10">
+      <div className="container mx-auto px-6 py-10 max-w-3xl">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+        <div className="mb-10">
+          <h1 className="text-4xl font-serif text-neutral-900 dark:text-neutral-100 mb-3">
             Profile
           </h1>
-          <p className="text-neutral-600 dark:text-neutral-400">
+          <p className="text-neutral-600 dark:text-neutral-400 font-light">
             Manage your account and preferences
           </p>
         </div>
 
         <div className="space-y-6">
           {/* User Info Card */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
+          <div className="card-elegant p-8">
             <div className="flex items-center gap-4 mb-6">
               <div className="relative w-20 h-20">
                 {profile?.avatar_url ? (
@@ -208,18 +208,18 @@ export default function ProfilePage() {
                     className="w-full h-full rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                    <span className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+                  <div className="w-full h-full rounded-full bg-primary-400 flex items-center justify-center shadow-soft">
+                    <span className="text-3xl font-bold text-white">
                       {displayName.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+                <h2 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100">
                   {displayName}
                 </h2>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 font-light">
                   Member since {memberSince}
                 </p>
               </div>
@@ -227,15 +227,15 @@ export default function ProfilePage() {
 
             <button
               onClick={() => setShowEditProfile(true)}
-              className="w-full px-4 py-2 border-2 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+              className="w-full px-6 py-3 bg-white dark:bg-neutral-700 border border-secondary-100 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 rounded-pill font-medium hover:bg-primary-400 hover:text-white hover:border-primary-400 transition-all shadow-soft"
             >
               Edit Profile
             </button>
           </div>
 
           {/* Your Journey */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <div className="card-elegant p-8">
+            <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
               Your Journey
             </h3>
 
@@ -252,15 +252,15 @@ export default function ProfilePage() {
 
             <button
               onClick={() => setShowUpdateJourney(true)}
-              className="w-full px-4 py-2 border-2 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+              className="w-full px-6 py-3 bg-white dark:bg-neutral-700 border border-secondary-100 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 rounded-pill font-medium hover:bg-primary-400 hover:text-white hover:border-primary-400 transition-all shadow-soft"
             >
               Update Journey Info
             </button>
           </div>
 
           {/* Account Settings */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <div className="card-elegant p-8">
+            <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
               Account
             </h3>
 
@@ -300,8 +300,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Preferences */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <div className="card-elegant p-8">
+            <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
               Preferences
             </h3>
 
@@ -345,22 +345,22 @@ export default function ProfilePage() {
 
             <button
               onClick={handleSavePreferences}
-              className="w-full px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+              className="w-full px-6 py-3 bg-primary-400 text-white rounded-pill font-medium hover:bg-primary-600 transition-all shadow-soft"
             >
               Save Preferences
             </button>
           </div>
 
           {/* Data & Privacy */}
-          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+          <div className="card-elegant p-8">
+            <h3 className="text-xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
               Data & Privacy
             </h3>
 
-            <div className="space-y-3 mb-4">
+            <div className="space-y-3 mb-6">
               <button
                 onClick={handleExportData}
-                className="w-full px-4 py-2 border-2 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors text-left flex items-center gap-2"
+                className="w-full px-6 py-3 bg-white dark:bg-neutral-700 border border-secondary-100 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 rounded-pill font-medium hover:bg-primary-400 hover:text-white hover:border-primary-400 transition-all shadow-soft flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -370,7 +370,7 @@ export default function ProfilePage() {
 
               <button
                 onClick={() => setShowDeleteAccount(true)}
-                className="w-full px-4 py-2 border-2 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left flex items-center gap-2"
+                className="w-full px-6 py-3 bg-white dark:bg-neutral-700 border border-red-200 dark:border-red-600 text-red-600 dark:text-red-400 rounded-pill font-medium hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-400 transition-all shadow-soft flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -392,7 +392,7 @@ export default function ProfilePage() {
           {/* Sign Out */}
           <button
             onClick={handleSignOut}
-            className="w-full px-4 py-3 bg-neutral-100 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 rounded-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors"
+            className="w-full px-6 py-3 bg-secondary-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 rounded-pill font-medium hover:bg-secondary-200 dark:hover:bg-neutral-600 transition-all shadow-soft"
           >
             Sign Out
           </button>

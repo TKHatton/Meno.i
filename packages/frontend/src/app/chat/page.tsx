@@ -46,14 +46,14 @@ export default function ChatPage() {
   return (
     <div className="h-screen mobile-full-height flex flex-col bg-neutral-50 dark:bg-neutral-900">
       {/* Chat Mode Selector */}
-      <div className="hidden md:flex items-center justify-center gap-2 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-4 py-2">
-        <span className="text-sm text-neutral-600 dark:text-neutral-400 mr-2">I am a:</span>
+      <div className="hidden md:flex items-center justify-center gap-3 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 px-6 py-4 shadow-elegant">
+        <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mr-2">I am a:</span>
         <button
           onClick={() => setChatMode('woman')}
-          className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+          className={`px-6 py-2 text-sm font-medium rounded-pill transition-all ${
             chatMode === 'woman'
-              ? `${userMode === 'woman' ? 'bg-primary-600' : 'bg-primary-500'} text-white shadow-sm`
-              : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
+              ? 'bg-primary-400 text-white shadow-soft'
+              : 'text-neutral-600 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-secondary-100 dark:hover:bg-neutral-700'
           }`}
           aria-label="Chat mode for women"
         >
@@ -61,10 +61,10 @@ export default function ChatPage() {
         </button>
         <button
           onClick={() => setChatMode('man')}
-          className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+          className={`px-6 py-2 text-sm font-medium rounded-pill transition-all ${
             chatMode === 'man'
-              ? `${userMode === 'man' ? 'bg-primary-700' : 'bg-primary-600'} text-white shadow-sm`
-              : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-700'
+              ? 'bg-primary-600 text-white shadow-soft'
+              : 'text-neutral-600 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-secondary-100 dark:hover:bg-neutral-700'
           }`}
           aria-label="Chat mode for men supporting their partners"
         >

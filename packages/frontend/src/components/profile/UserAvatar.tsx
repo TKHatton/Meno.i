@@ -51,7 +51,7 @@ export default function UserAvatar({
           referrerPolicy="no-referrer"
         />
       ) : (
-        <div className="h-full w-full rounded-full bg-gradient-to-br from-primary-400 to-primary-600
+        <div className="h-full w-full rounded-full bg-primary-400
                       flex items-center justify-center text-white font-semibold ring-2 ring-white dark:ring-neutral-700 shadow-soft">
           {getInitials()}
         </div>

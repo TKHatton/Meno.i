@@ -98,7 +98,7 @@ export default function DashboardPage() {
   const userJoinDate = user.created_at ? new Date(user.created_at) : new Date();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-secondary-100 via-neutral-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+    <main className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       <div className="container mx-auto px-6 py-10 max-w-5xl pb-24 md:pb-10">
         {/* Welcome Header */}
         <div className="mb-10">
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
                          rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl
+                <div className="flex-shrink-0 w-14 h-14 bg-primary-400 rounded-2xl
                               flex items-center justify-center shadow-soft">
                   <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -221,7 +221,7 @@ export default function DashboardPage() {
                 className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
                          rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl
+                <div className="flex-shrink-0 w-14 h-14 bg-secondary-400 rounded-2xl
                               flex items-center justify-center shadow-soft">
                   <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

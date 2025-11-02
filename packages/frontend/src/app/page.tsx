@@ -47,7 +47,7 @@ export default function Home() {
   const avatarUrl = customAvatarUrl || googleAvatarUrl;
 
   return (
-    <main id="main-content" className="min-h-screen flex flex-col bg-gradient-to-br from-secondary-100 via-neutral-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+    <main id="main-content" className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-900">
       {/* Header with Accessibility Menu */}
       <div className="absolute top-4 right-4 z-50">
         <AccessibilityMenu />
@@ -81,9 +81,8 @@ export default function Home() {
           {!user ? (
             <button
               onClick={() => setShowSignIn(true)}
-              className="px-10 py-4 bg-primary-400 text-neutral-800 font-semibold rounded-pill
-                       hover:bg-primary-600 hover:text-white transition-all shadow-soft hover:shadow-soft-lg
-                       transform hover:scale-105"
+              className="px-10 py-4 bg-primary-400 text-white font-semibold rounded-pill
+                       hover:bg-primary-600 transition-all shadow-soft hover:shadow-soft-lg"
             >
               Sign In to Get Started
             </button>
@@ -91,9 +90,8 @@ export default function Home() {
             <>
               <Link
                 href="/dashboard"
-                className="px-10 py-4 bg-primary-400 text-neutral-800 font-semibold rounded-pill
-                         hover:bg-primary-600 hover:text-white transition-all shadow-soft hover:shadow-soft-lg
-                         transform hover:scale-105 inline-block"
+                className="px-10 py-4 bg-primary-400 text-white font-semibold rounded-pill
+                         hover:bg-primary-600 transition-all shadow-soft hover:shadow-soft-lg inline-block"
               >
                 Go to Dashboard
               </Link>
@@ -136,7 +134,7 @@ export default function Home() {
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           <div className="card-elegant p-8 slide-up">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-primary-400 rounded-2xl flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z" />
               </svg>
@@ -150,7 +148,7 @@ export default function Home() {
           </div>
 
           <div className="card-elegant p-8 slide-up" style={{ animationDelay: '0.1s' }}>
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-primary-400 rounded-2xl flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
@@ -164,7 +162,7 @@ export default function Home() {
           </div>
 
           <div className="card-elegant p-8 slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-primary-400 rounded-2xl flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
               </svg>

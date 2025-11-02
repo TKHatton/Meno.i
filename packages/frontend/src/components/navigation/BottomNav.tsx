@@ -68,7 +68,7 @@ export default function BottomNav() {
               href={item.path}
               className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all ${
                 active
-                  ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-soft'
+                  ? 'bg-primary-400 text-white shadow-soft'
                   : 'text-neutral-600 dark:text-neutral-400 hover:bg-secondary-100 dark:hover:bg-neutral-700'
               }`}
             >

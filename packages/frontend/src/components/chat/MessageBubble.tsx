@@ -57,7 +57,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
           <div
             className={`rounded-2xl px-6 py-4 shadow-soft ${
               isUser
-                ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white'
+                ? 'bg-primary-400 text-white'
                 : 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 border border-secondary-100 dark:border-neutral-700'
             }`}
           >
@@ -71,7 +71,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
               className={`mt-3 p-2.5 rounded-xl shadow-soft
                        transition-all hover:scale-105
                        ${isSpeaking
-                         ? 'bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-soft-lg'
+                         ? 'bg-primary-400 text-white shadow-soft-lg'
                          : 'bg-white dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border border-secondary-100 dark:border-neutral-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 hover:border-primary-400'
                        }`}
               aria-label={isSpeaking ? 'Stop speaking' : 'Read message aloud'}

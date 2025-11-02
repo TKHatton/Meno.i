@@ -50,12 +50,12 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
   return (
     <div className="h-screen flex flex-col bg-neutral-50 pb-16 md:pb-0">
       {/* Header */}
-      <header className="bg-white border-b border-neutral-200 px-6 py-4">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
+      <header className="bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-secondary-100 dark:border-neutral-700 px-6 py-6 shadow-elegant">
+        <div className="flex items-center justify-between max-w-5xl mx-auto">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push('/history')}
-              className="text-neutral-600 hover:text-neutral-900"
+              className="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -74,13 +74,13 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
             <img
               src="/images/logo.png"
               alt="Meno.i Logo"
-              className="h-8 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
-            <h1 className="text-lg font-medium">Conversation</h1>
+            <h1 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100">Conversation</h1>
           </div>
           <button
             onClick={() => router.push('/chat')}
-            className="text-sm text-teal-600 hover:text-teal-700 font-medium"
+            className="px-6 py-2 bg-primary-400 text-white rounded-pill hover:bg-primary-600 transition-all shadow-soft font-medium"
           >
             New Chat
           </button>
@@ -88,8 +88,8 @@ export default function ConversationDetailPage({ params }: ConversationDetailPro
       </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex-1 overflow-y-auto px-6 py-10">
+        <div className="max-w-5xl mx-auto">
           {loading ? (
             <div className="text-center py-12">
               <p className="text-neutral-500">Loading messages...</p>
