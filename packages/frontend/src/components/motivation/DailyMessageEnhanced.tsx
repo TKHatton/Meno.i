@@ -96,18 +96,8 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
   };
 
   const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'affirmation':
-        return 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800';
-      case 'education':
-        return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800';
-      case 'tip':
-        return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
-      case 'encouragement':
-        return 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';
-      default:
-        return 'bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700';
-    }
+    // All categories use brand colors only
+    return 'bg-white dark:bg-neutral-800 border-secondary-100 dark:border-neutral-700';
   };
 
   const getCategoryIcon = (category: string) => {
@@ -138,16 +128,18 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
   return (
     <div className="space-y-4">
       {/* Message Card */}
-      <div className={`rounded-xl border-2 p-6 shadow-md transition-all ${getCategoryColor(message.category)}`}>
+      <div className="card-elegant p-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{getCategoryIcon(message.category)}</span>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center">
+              <span className="text-3xl">{getCategoryIcon(message.category)}</span>
+            </div>
             <div>
-              <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+              <h3 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100">
                 Today's Message
               </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 font-light">
                 {getCategoryLabel(message.category)}
               </p>
             </div>
@@ -156,11 +148,11 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
             {/* Favorite Button */}
             <button
               onClick={toggleFavorite}
-              className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-black/20 transition-colors"
+              className="p-2.5 rounded-xl hover:bg-secondary-100 dark:hover:bg-neutral-700 transition-colors"
               aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
               <svg
-                className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'fill-none text-neutral-400'}`}
+                className={`w-6 h-6 ${isFavorite ? 'fill-primary-600 text-primary-600' : 'fill-none text-neutral-400'}`}
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -172,10 +164,10 @@ export default function DailyMessageEnhanced({ userJoinDate }: DailyMessageEnhan
             <div className="relative">
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
-                className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-black/20 transition-colors"
+                className="p-2.5 rounded-xl hover:bg-secondary-100 dark:hover:bg-neutral-700 transition-colors"
                 aria-label="Share message"
               >
-                <svg className="w-5 h-5 text-neutral-600 dark:text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-6 h-6 text-neutral-600 dark:text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
               </button>

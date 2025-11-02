@@ -116,66 +116,39 @@ export default function DashboardPage() {
 
           {/* AI Insights Section */}
           {!loadingInsights && insights.length > 0 && (
-            <div className="card-elegant p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100">
+            <div className="card-elegant p-10">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-serif text-neutral-900 dark:text-neutral-100">
                   Your Insights
                 </h2>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400 px-3 py-1 bg-secondary-100 dark:bg-neutral-700 rounded-pill">
+                <span className="text-xs font-medium text-primary-600 dark:text-primary-400 px-4 py-2 bg-secondary-100 dark:bg-neutral-700 rounded-pill">
                   AI-powered
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {insights.map((insight, index) => (
                   <div
                     key={index}
-                    className={`p-4 rounded-lg border-2 ${
-                      insight.type === 'celebration'
-                        ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-                        : insight.type === 'pattern'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-                        : insight.type === 'trend'
-                        ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
-                        : 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800'
-                    }`}
+                    className="p-6 rounded-2xl bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700 shadow-soft hover:shadow-soft-lg transition-all"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl flex-shrink-0">{insight.icon}</span>
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-xl flex items-center justify-center">
+                        <span className="text-2xl">{insight.icon}</span>
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className={`font-semibold mb-1 ${
-                          insight.type === 'celebration'
-                            ? 'text-green-900 dark:text-green-100'
-                            : insight.type === 'pattern'
-                            ? 'text-blue-900 dark:text-blue-100'
-                            : insight.type === 'trend'
-                            ? 'text-purple-900 dark:text-purple-100'
-                            : 'text-primary-900 dark:text-primary-100'
-                        }`}>
+                        <h3 className="font-serif text-lg text-neutral-900 dark:text-neutral-100 mb-2">
                           {insight.title}
                         </h3>
-                        <p className={`text-sm ${
-                          insight.type === 'celebration'
-                            ? 'text-green-700 dark:text-green-300'
-                            : insight.type === 'pattern'
-                            ? 'text-blue-700 dark:text-blue-300'
-                            : insight.type === 'trend'
-                            ? 'text-purple-700 dark:text-purple-300'
-                            : 'text-primary-700 dark:text-primary-300'
-                        }`}>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
                           {insight.description}
                         </p>
                         {insight.actionable && insight.action && (
-                          <button className={`mt-2 text-sm font-medium underline ${
-                            insight.type === 'celebration'
-                              ? 'text-green-800 dark:text-green-200 hover:text-green-900 dark:hover:text-green-100'
-                              : insight.type === 'pattern'
-                              ? 'text-blue-800 dark:text-blue-200 hover:text-blue-900 dark:hover:text-blue-100'
-                              : insight.type === 'trend'
-                              ? 'text-purple-800 dark:text-purple-200 hover:text-purple-900 dark:hover:text-purple-100'
-                              : 'text-primary-800 dark:text-primary-200 hover:text-primary-900 dark:hover:text-primary-100'
-                          }`}>
-                            {insight.action} →
+                          <button className="mt-3 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1">
+                            {insight.action}
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
                           </button>
                         )}
                       </div>
@@ -187,121 +160,122 @@ export default function DashboardPage() {
           )}
 
           {/* Quick Actions */}
-          <div className="card-elegant p-8">
-            <h2 className="text-2xl font-serif text-neutral-900 dark:text-neutral-100 mb-6">
+          <div className="card-elegant p-10">
+            <h2 className="text-3xl font-serif text-neutral-900 dark:text-neutral-100 mb-8">
               Quick Actions
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Log Symptoms */}
               <Link
                 href="/track"
-                className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
-                         rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
+                className="group relative overflow-hidden bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl p-6 transition-all hover:shadow-soft-lg hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-14 h-14 bg-primary-400 rounded-2xl
-                              flex items-center justify-center shadow-soft">
-                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-lg">
-                    Log Today's Symptoms
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Track how you're feeling today
-                  </p>
+                <div className="flex items-start gap-5">
+                  <div className="flex-shrink-0 w-16 h-16 bg-primary-400 rounded-2xl flex items-center justify-center shadow-soft
+                                group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-serif text-xl text-neutral-900 dark:text-neutral-100 mb-2">
+                      Log Symptoms
+                    </h3>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Track how you're feeling today
+                    </p>
+                  </div>
                 </div>
               </Link>
 
               {/* Write Journal Entry */}
               <Link
                 href="/journal"
-                className="flex items-center gap-4 p-5 bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
-                         rounded-2xl transition-all group hover:shadow-soft-lg hover:scale-105 hover:border-primary-400"
+                className="group relative overflow-hidden bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl p-6 transition-all hover:shadow-soft-lg hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-14 h-14 bg-secondary-400 rounded-2xl
-                              flex items-center justify-center shadow-soft">
-                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-lg">
-                    Write Journal Entry
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Process your thoughts and feelings
-                  </p>
+                <div className="flex items-start gap-5">
+                  <div className="flex-shrink-0 w-16 h-16 bg-secondary-400 rounded-2xl flex items-center justify-center shadow-soft
+                                group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-serif text-xl text-neutral-900 dark:text-neutral-100 mb-2">
+                      Write Journal
+                    </h3>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Process your thoughts and feelings
+                    </p>
+                  </div>
                 </div>
               </Link>
 
               {/* Chat with MenoAI */}
               <Link
                 href="/chat"
-                className={`flex items-center gap-4 p-4 border-2 border-neutral-200 dark:border-neutral-700
-                         rounded-lg transition-all group
-                         ${userMode === 'man'
-                           ? 'hover:border-primary-600 dark:hover:border-primary-600 hover:bg-primary-100 dark:hover:bg-primary-900/30'
-                           : 'hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20'}`}
+                className="group relative overflow-hidden bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl p-6 transition-all hover:shadow-soft-lg hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full
-                              flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                  <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
-                    Chat with MenoAI
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Get support and answers
-                  </p>
+                <div className="flex items-start gap-5">
+                  <div className="flex-shrink-0 w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center shadow-soft
+                                group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-serif text-xl text-neutral-900 dark:text-neutral-100 mb-2">
+                      Chat with AI
+                    </h3>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Get personalized support anytime
+                    </p>
+                  </div>
                 </div>
               </Link>
 
               {/* View Stats */}
               <Link
-                href="/journal?tab=stats"
-                className={`flex items-center gap-4 p-4 border-2 border-neutral-200 dark:border-neutral-700
-                         rounded-lg transition-all group
-                         ${userMode === 'man'
-                           ? 'hover:border-primary-600 dark:hover:border-primary-600 hover:bg-primary-100 dark:hover:bg-primary-900/30'
-                           : 'hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20'}`}
+                href="/track?tab=stats"
+                className="group relative overflow-hidden bg-white dark:bg-neutral-800 border border-secondary-100 dark:border-neutral-700
+                         rounded-2xl p-6 transition-all hover:shadow-soft-lg hover:border-primary-400"
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full
-                              flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
-                  <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
-                    View Your Stats
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    See your progress and patterns
-                  </p>
+                <div className="flex items-start gap-5">
+                  <div className="flex-shrink-0 w-16 h-16 bg-secondary-600 rounded-2xl flex items-center justify-center shadow-soft
+                                group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-serif text-xl text-neutral-900 dark:text-neutral-100 mb-2">
+                      View Stats
+                    </h3>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Track your progress and patterns
+                    </p>
+                  </div>
                 </div>
               </Link>
             </div>
           </div>
 
-          {/* Tips & Encouragement */}
-          <div className={`rounded-xl p-6 border-2
-            ${userMode === 'man'
-              ? 'bg-gradient-to-br from-primary-100 to-blue-100 dark:from-primary-900/30 dark:to-blue-900/30 border-primary-300 dark:border-primary-700'
-              : 'bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 border-primary-200 dark:border-primary-800'}`}>
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 text-2xl">💡</div>
-              <div>
-                <h3 className={`font-semibold mb-2 ${userMode === 'man' ? 'text-primary-900 dark:text-primary-100' : 'text-primary-900 dark:text-primary-100'}`}>
+          {/* Encouragement Card */}
+          <div className="card-elegant p-8 bg-secondary-100 dark:bg-neutral-800 border-2 border-primary-200 dark:border-primary-800">
+            <div className="flex items-start gap-5">
+              <div className="flex-shrink-0 w-14 h-14 bg-primary-400 rounded-2xl flex items-center justify-center shadow-soft">
+                <span className="text-3xl">✨</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-serif text-2xl text-neutral-900 dark:text-neutral-100 mb-3">
                   Your Journey Matters
                 </h3>
-                <p className={`text-sm ${userMode === 'man' ? 'text-primary-800 dark:text-primary-200' : 'text-primary-800 dark:text-primary-200'}`}>
-                  Remember: Every entry you log, every journal you write, and every day you show up
+                <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                  Every entry you log, every journal you write, and every day you show up
                   is helping you understand your body better. You're doing amazing work.
                 </p>
               </div>
