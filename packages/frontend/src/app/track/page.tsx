@@ -121,7 +121,7 @@ export default function TrackPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-10 pb-24 md:pb-10">
+      <div className="container mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-10 pb-40 md:pb-10">
         {activeView === 'checkin' && (
           <DailyCheckIn userId={user.id} onSaved={handleCheckInSaved} />
         )}
